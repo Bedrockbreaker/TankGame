@@ -54,3 +54,7 @@ crashlytics-build.properties
 
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Misc
+/[Aa]ssets/[Ee]ditor[Tt]hemes/
+/[Aa]ssets/[Ee]ditor[Tt]hemes.meta
