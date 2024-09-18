@@ -56,5 +56,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # Misc
+.editorconfig
+
 /[Aa]ssets/[Ee]ditor[Tt]hemes/
 /[Aa]ssets/[Ee]ditor[Tt]hemes.meta
