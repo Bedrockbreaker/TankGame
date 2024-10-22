@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 using AI.BehaviorTree;
 
 namespace AI.StateMachine {
@@ -10,9 +8,10 @@ namespace AI.StateMachine {
 	 */
 	public class FleeState : AIState {
 		public FleeState(Blackboard blackboard) : base(blackboard) {
-			behaviorTree = new(blackboard, new Sequence(new List<Node> {
+			behaviorTree = new(
+				blackboard,
 				new AvoidTransformBehavior("PlayerTransform", 0.1f)
-			}));
+			);
 		}
 	}
 }
