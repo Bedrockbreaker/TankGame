@@ -1,5 +1,9 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
+
+using Util;
+
+public delegate void OnPossessHandler(Pawn pawn);
+public delegate void OnUnpossessHandler();
 
 /**
  * <summary>
@@ -8,20 +12,63 @@ using UnityEngine.InputSystem;
  */
 public abstract class Controller : MonoBehaviour {
 
-	protected InputAction inputMove;
+	private bool isUpdating = false;
+	[ReadOnly]
+	[SerializeField]
+	private Optional<Pawn> pawn = Optional<Pawn>.None;
 
-	public Pawn pawn;
+	public Optional<Pawn> PawnOptional {
+		get => pawn;
+		protected set {
+			if (isUpdating) return;
+			isUpdating = true;
+
+			if (pawn) {
+				OnUnpossess?.Invoke();
+				Pawn.UnbindController();
+			}
+
+			pawn = value;
+
+			if (pawn) {
+				Pawn.BindController(this);
+				OnPossess?.Invoke(Pawn);
+			}
+
+			isUpdating = false;
+		}
+	}
+	public Pawn Pawn => pawn.ValueOrDefault();
+
+	public event OnPossessHandler OnPossess;
+	public event OnUnpossessHandler OnUnpossess;
 
 	/**
 	 * <summary>
-	 * Handle input from the InputSystem
+	 * Handle decision making every frame
 	 * </summary>
 	 */
 	protected abstract void HandleInput();
 
-	public virtual void Start() {
-		inputMove = InputSystem.actions.FindAction("Move");
+	/**
+	 * <summary>
+	 * Posess the given pawn
+	 * </summary>
+	 */
+	public virtual void Possess(Pawn pawn) {
+		PawnOptional = pawn;
+	}
 
+	/**
+	 * <summary>
+	 * Unposess the current pawn
+	 * </summary>
+	 */
+	public virtual void Unpossess() {
+		PawnOptional = Optional<Pawn>.None;
+	}
+
+	public virtual void Start() {
 		GameManager.Instance.RegisterController(this);
 	}
 
@@ -30,6 +77,7 @@ public abstract class Controller : MonoBehaviour {
 	}
 
 	public virtual void OnDestroy() {
+		Unpossess();
 		GameManager.Instance.UnregisterController(this);
 	}
 }

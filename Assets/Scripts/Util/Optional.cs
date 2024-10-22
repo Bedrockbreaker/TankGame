@@ -1,4 +1,8 @@
-using System.Diagnostics;
+using System;
+
+using Unity.VisualScripting;
+
+using UnityEngine;
 
 namespace Util {
 	/**
@@ -6,26 +10,54 @@ namespace Util {
 	 * An optional value
 	 * </summary>
 	 */
-	public struct Optional<T> {
+	[Serializable]
+	public struct Optional<T> : ISerializationCallbackReceiver {
 
+		[SerializeField]
 		private T value;
 		public T Value {
 			readonly get {
-				Debug.Assert(hasValue, "Optional has no value.");
+				System.Diagnostics.Debug.Assert(hasValue, "Optional has no value.");
 				return value;
 			}
 			set {
+				if (this.value is UnityEngine.Object prevUnityObject) {
+					DestroyListener listener = prevUnityObject
+						.GetComponent<DestroyListener>();
+					if (listener != null) {
+						listener.OnDestroyed -= Clear;
+					}
+				}
+
 				this.value = value;
-				hasValue = true;
+				hasValue = value != null;
+
+				if (value is UnityEngine.Object unityObject) {
+					DestroyListener listener = unityObject
+						.GetOrAddComponent<DestroyListener>();
+					listener.OnDestroyed += Clear;
+				}
 			}
 		}
 
 		private bool hasValue;
-		public readonly bool HasValue => hasValue;
+		public readonly bool HasValue {
+			get {
+				if (!hasValue) return false;
+
+				if (value is UnityEngine.Object unityObject) {
+					return unityObject != null;
+				}
+
+				return true;
+			}
+		}
 
 		public Optional(T value) {
 			this.value = value;
-			hasValue = true;
+			hasValue = value != null;
+			// Use the setter to validate the value.
+			Value = value;
 		}
 
 		public static Optional<T> None => new();
@@ -39,12 +71,19 @@ namespace Util {
 		}
 
 		public void Clear() {
+			Value = default;
 			hasValue = false;
-			value = default;
 		}
 
 		public readonly override string ToString() {
-			return hasValue ? $"Optional<{value}>" : "Optional<None>";
+			return $"Optional<{typeof(T).Name}>"
+				+ (hasValue ? $" {{{value}}}" : ".None");
+		}
+
+		public readonly void OnBeforeSerialize() { }
+
+		public void OnAfterDeserialize() {
+			hasValue = value != null;
 		}
 
 		public static explicit operator T(Optional<T> optional) {
@@ -56,15 +95,15 @@ namespace Util {
 		}
 
 		public static implicit operator bool(Optional<T> optional) {
-			return optional.hasValue;
+			return optional.HasValue;
 		}
 
 		public static bool operator true(Optional<T> optional) {
-			return optional.hasValue;
+			return optional.HasValue;
 		}
 
 		public static bool operator false(Optional<T> optional) {
-			return !optional.hasValue;
+			return !optional.HasValue;
 		}
 	}
 }

@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 
+using AI;
+using AI.Sense;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -13,27 +16,35 @@ using Util;
  * The singleton game manager
  * </summary>
  */
-public class GameManager : MonoBehaviour {
+public sealed class GameManager : MonoBehaviour {
 
 	public static GameManager Instance { get; private set; }
-
-	[Header("Default Prefabs")]
-	public GameObject defaultPawnPrefab;
-	public GameObject defaultControllerPrefab;
 
 	private List<GameObject> SpawnPoints { get; } = new();
 	private List<Pawn> Pawns { get; } = new();
 	private List<Controller> Controllers { get; } = new();
+	private List<PlayerController> PlayerControllers { get; } = new();
+	private List<Sound> Sounds { get; } = new();
+
+	[Header("Default World Objects")]
+	public Camera defaultCamera;
+	[Header("Default Prefabs")]
+	public GameObject defaultPawnPrefab;
+	public GameObject defaultControllerPrefab;
+
+	public BlackboardKey<List<Sound>> SoundsKey = "Sounds";
 
 	public GameManager() {
 		// Unity objects should not use coalescing assignment. (UNT0023)
 		// Instance ??= this;
-		if (Instance == null) {
-			Instance = this;
-		}
+		if (Instance != null) return;
+		Instance = this;
+
+		Blackboard.GLOBAL.Set(SoundsKey, Sounds);
 	}
 
 	private void Awake() {
+		// TODO: strip MonoBehavior from GameManager. Put this into the constructor.
 		if (Instance != this) {
 			Destroy(gameObject);
 		} else {
@@ -42,10 +53,17 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void Start() {
+		if (PlayerControllers.Count > 0) return;
 		Optional<GameObject> spawnPoint = SpawnPoints.Count > 0
 			? SpawnPoints[0]
 			: Optional<GameObject>.None;
 		SpawnPlayer(defaultPawnPrefab, defaultControllerPrefab, spawnPoint);
+	}
+
+	private void Update() {
+		for (int i = Sounds.Count - 1; i >= 0; i--) {
+			Sounds[i].Update();
+		}
 	}
 
 	/**
@@ -72,7 +90,16 @@ public class GameManager : MonoBehaviour {
 	 * </summary>
 	 */
 	public void RegisterController(Controller controller) {
-		Controllers.Add(controller);
+		if (!Controllers.Contains(controller)) Controllers.Add(controller);
+
+		if (controller is not PlayerController playerController) return;
+
+		PlayerControllers.Add(playerController);
+
+		if (!controller.PawnOptional) return;
+		if (PlayerControllers.Count > 1) return;
+
+		controller.Pawn.AttachCamera(defaultCamera);
 	}
 
 	/**
@@ -82,6 +109,10 @@ public class GameManager : MonoBehaviour {
 	 */
 	public void UnregisterController(Controller controller) {
 		Controllers.Remove(controller);
+
+		if (controller is PlayerController playerController) {
+			PlayerControllers.Remove(playerController);
+		}
 	}
 
 	/**
@@ -138,7 +169,7 @@ public class GameManager : MonoBehaviour {
 	 * <summary>
 	 * Spawn a new controller and pawn at the given spawn pose.
 	 * </summary>
-	 * <seealso cref="SpawnPlayer(GameObject, GameObject, GameObject)"/> 
+	 * <seealso cref="SpawnPlayer(GameObject, GameObject, Optional&lt;GameObject&gt;)"/> 
 	 */
 	public void SpawnPlayer(
 		GameObject pawnPrefab,
@@ -159,6 +190,6 @@ public class GameManager : MonoBehaviour {
 		);
 		Controller controller = controllerObject.GetComponent<Controller>();
 
-		controller.pawn = pawn;
+		controller.Possess(pawn);
 	}
 }

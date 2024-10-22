@@ -7,7 +7,7 @@ using UnityEngine;
  */
 public class SpawnPoint : MonoBehaviour {
 
-	private void Awake() {
+	private void Start() {
 		GameManager.Instance.RegisterSpawnPoint(gameObject);
 	}
 
