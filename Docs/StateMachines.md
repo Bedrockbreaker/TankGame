@@ -53,6 +53,7 @@ stateDiagram-v2
 	[*] --> Idle
 	Idle --> Investigate: CanHear
 	Investigate --> Idle: !IsPlayerNear
+	InvestigateSound
 	Wait2: Wait
 
 	state Idle {
