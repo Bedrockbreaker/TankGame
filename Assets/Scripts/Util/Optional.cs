@@ -32,7 +32,10 @@ namespace Util {
 				this.value = value;
 				hasValue = value != null;
 
-				if (value is UnityEngine.Object unityObject) {
+				if (
+					value is UnityEngine.Object unityObject
+					&& unityObject != null
+				) {
 					DestroyListener listener = unityObject
 						.GetOrAddComponent<DestroyListener>();
 					listener.OnDestroyed += Clear;
