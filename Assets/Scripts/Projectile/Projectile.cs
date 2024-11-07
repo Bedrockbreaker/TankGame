@@ -1,12 +1,14 @@
-using UnityEngine;
+using Util;
 
 /**
  * <summary>
  * Base class for all projectiles
  * </summary>
  */
-public abstract class Projectile : MonoBehaviour {
+public abstract class Projectile : ContactListener {
 
+	[ReadOnly]
+	public Optional<Controller> owner = Optional<Controller>.None;
 	public float lifetime = 7f;
 
 	public virtual void Start() {

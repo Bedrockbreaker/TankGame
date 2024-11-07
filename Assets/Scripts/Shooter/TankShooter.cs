@@ -10,13 +10,17 @@ public class TankShooter : Shooter {
 	public override bool Shoot() {
 		if (!base.Shoot()) return false;
 
-		GameObject projectile = Instantiate(
+		GameObject projectileObject = Instantiate(
 			projectilePrefab,
 			spawnTransform.position,
 			spawnTransform.rotation
 		);
-		projectile.GetComponent<ContactDamager>().owner = owner;
-		projectile.GetComponent<Rigidbody>().AddForce(transform.forward * force);
+
+		Projectile projectile = projectileObject.GetComponent<Projectile>();
+		projectile.owner = owner;
+
+		Rigidbody projectileRigidbody = projectileObject.GetComponent<Rigidbody>();
+		projectileRigidbody.AddForce(transform.forward * force);
 
 		return true;
 	}

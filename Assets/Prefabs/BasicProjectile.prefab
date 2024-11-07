@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 8654539909850025677}
   - component: {fileID: 3190432398596738768}
   - component: {fileID: 5056357913602793365}
-  - component: {fileID: 7523441255964649066}
   - component: {fileID: -4313645151380586995}
+  - component: {fileID: 1092981962191463179}
   m_Layer: 0
   m_Name: BasicProjectile
   m_TagString: Untagged
@@ -138,19 +138,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7523441255964649066
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5402592200804750428}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 489f405ab5a18334a866acc3edf659c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 30
 --- !u!114 &-4313645151380586995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,4 +150,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2214c440f810244986d3d3754d7ca77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner:
+    value: {fileID: 0}
   lifetime: 7
+  <Damager>k__BackingField: {fileID: 1092981962191463179}
+--- !u!114 &1092981962191463179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5402592200804750428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 489f405ab5a18334a866acc3edf659c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 20
+  owner:
+    value: {fileID: 0}
