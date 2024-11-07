@@ -36,9 +36,6 @@ public abstract class Effect {
 	 */
 	public virtual void Tick(Pawn pawn) {
 		Duration -= Time.deltaTime;
-		if (Duration <= 0) {
-			Remove(pawn);
-		}
 	}
 
 	/**

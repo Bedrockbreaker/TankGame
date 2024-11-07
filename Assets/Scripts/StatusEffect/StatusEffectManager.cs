@@ -45,9 +45,8 @@ public class StatusEffectManager : MonoBehaviour {
 	 */
 	public void ClearEffects() {
 		foreach (Effect effect in Effects) {
-			effect.Remove(Pawn, true); // clear without triggering effects
+			Remove(effect, true); // clear without triggering effects
 		}
-		Effects.Clear();
 	}
 
 	/**
@@ -69,8 +68,7 @@ public class StatusEffectManager : MonoBehaviour {
 			Effect effect = Effects[i];
 			effect.Tick(Pawn);
 			if (effect.Duration <= 0) {
-				effect.Remove(Pawn);
-				Effects.RemoveAt(i);
+				Remove(effect);
 			}
 		}
 	}
