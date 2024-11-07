@@ -6,7 +6,7 @@ using Util;
  * Level has no effect
  * </summary>
  */
-public class MortalCoilEffect : Effect {
+public class MortalCoilEffect : StatusEffect {
 
 	public MortalCoilEffect(
 		float duration,

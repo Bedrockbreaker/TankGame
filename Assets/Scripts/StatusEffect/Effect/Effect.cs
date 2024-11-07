@@ -7,7 +7,7 @@ using Util;
  * Generic status effect -- buff, debuff, etc.
  * </summary>
  */
-public abstract class Effect {
+public abstract class StatusEffect {
 
 	[field: SerializeField]
 	public float Duration { get; protected set; }
@@ -16,7 +16,7 @@ public abstract class Effect {
 	[field: SerializeField]
 	public Optional<Controller> AppliedBy { get; protected set; }
 
-	public Effect(float duration, int level, Optional<Controller> appliedBy) {
+	public StatusEffect(float duration, int level, Optional<Controller> appliedBy) {
 		Duration = duration;
 		Level = level;
 		AppliedBy = appliedBy;

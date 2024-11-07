@@ -7,7 +7,7 @@ using Util;
  * Damages health over time
  * </summary>
  */
-public class NapalmEffect : Effect {
+public class NapalmEffect : StatusEffect {
 
 	public NapalmEffect(
 		float duration,

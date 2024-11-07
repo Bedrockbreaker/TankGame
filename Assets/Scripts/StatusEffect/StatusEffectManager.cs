@@ -16,14 +16,14 @@ public class StatusEffectManager : MonoBehaviour {
 	public Pawn Pawn { get; protected set; }
 	[field: SerializeField]
 	[field: ReadOnly]
-	public List<Effect> Effects { get; } = new();
+	public List<StatusEffect> Effects { get; } = new();
 
 	/**
 	 * <summary>
 	 * Apply an effect
 	 * </summary>
 	 */
-	public void Apply(Effect effect) {
+	public void Apply(StatusEffect effect) {
 		Effects.Add(effect);
 		effect.Apply(Pawn);
 	}
@@ -33,7 +33,7 @@ public class StatusEffectManager : MonoBehaviour {
 	 * Remove an effect, optionally clearing without triggering effects
 	 * </summary>
 	 */
-	public void Remove(Effect effect, bool clear = false) {
+	public void Remove(StatusEffect effect, bool clear = false) {
 		effect.Remove(Pawn, clear);
 		Effects.Remove(effect);
 	}
@@ -44,7 +44,7 @@ public class StatusEffectManager : MonoBehaviour {
 	 * </summary>
 	 */
 	public void ClearEffects() {
-		foreach (Effect effect in Effects) {
+		foreach (StatusEffect effect in Effects) {
 			Remove(effect, true); // clear without triggering effects
 		}
 	}
@@ -54,18 +54,18 @@ public class StatusEffectManager : MonoBehaviour {
 	 * Get an effect
 	 * </summary>
 	 */
-	public Optional<Effect> GetEffect(Type type) {
-		foreach (Effect effect in Effects) {
+	public Optional<StatusEffect> GetEffect(Type type) {
+		foreach (StatusEffect effect in Effects) {
 			if (effect.GetType() == type) {
 				return effect;
 			}
 		}
-		return Optional<Effect>.None;
+		return Optional<StatusEffect>.None;
 	}
 
 	public void Update() {
 		for (int i = Effects.Count - 1; i >= 0; i--) {
-			Effect effect = Effects[i];
+			StatusEffect effect = Effects[i];
 			effect.Tick(Pawn);
 			if (effect.Duration <= 0) {
 				Remove(effect);

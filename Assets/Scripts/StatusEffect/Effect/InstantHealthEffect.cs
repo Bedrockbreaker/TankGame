@@ -6,7 +6,7 @@ using Util;
  * Duration has no effect
  * </summary>
  */
-public class InstantHealthEffect : Effect {
+public class InstantHealthEffect : StatusEffect {
 
 	public InstantHealthEffect(
 		float duration,

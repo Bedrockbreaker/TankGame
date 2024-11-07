@@ -7,7 +7,7 @@ using Util;
  * Regenerates health over time
  * </summary>
  */
-public class RegenEffect : Effect {
+public class RegenEffect : StatusEffect {
 
 	public RegenEffect(
 		float duration,
