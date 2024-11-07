@@ -42,7 +42,8 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -132,6 +133,8 @@ GameObject:
   - component: {fileID: 387328220}
   - component: {fileID: 387328224}
   - component: {fileID: 387328225}
+  - component: {fileID: 387328227}
+  - component: {fileID: 387328226}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -258,6 +261,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <MaxHealth>k__BackingField: 50
   <CurrentHealth>k__BackingField: 50
+--- !u!114 &387328226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 387328219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bc459cd78f3e024791f54b972452f67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Pawn>k__BackingField: {fileID: 387328227}
+--- !u!114 &387328227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 387328219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3b6faa706bd833429e71cf4d4741bbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller:
+    value: {fileID: 0}
+  shooter:
+    value: {fileID: 0}
+  <Movement>k__BackingField: {fileID: 0}
+  <StatusEffectManager>k__BackingField: {fileID: 387328226}
+  autoPossessByController: 
+  cameraTransform: {fileID: 0}
 --- !u!1001 &431445459
 PrefabInstance:
   m_ObjectHideFlags: 0

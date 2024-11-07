@@ -20,10 +20,12 @@ public abstract class Pawn : MonoBehaviour {
 	private Optional<Controller> controller = Optional<Controller>.None;
 
 	[SerializeField]
-	protected Shooter shooter;
+	protected Optional<Shooter> shooter;
 
 	[field: SerializeField]
 	public BasicMovement Movement { get; protected set; }
+	[field: SerializeField]
+	public StatusEffectManager StatusEffectManager { get; protected set; }
 	[Type(typeof(Controller))]
 	public string autoPossessByController;
 
@@ -63,9 +65,7 @@ public abstract class Pawn : MonoBehaviour {
 	public virtual void BindController(Controller controller) {
 		ControllerOptional = controller;
 
-		Optional<Shooter> shooter = GetComponent<Shooter>();
-		if (!shooter) return;
-		shooter.Value.owner = controller;
+		if (shooter) shooter.Value.owner = controller;
 	}
 
 	/**
@@ -76,9 +76,7 @@ public abstract class Pawn : MonoBehaviour {
 	public virtual void UnbindController() {
 		ControllerOptional = Optional<Controller>.None;
 
-		Optional<Shooter> shooter = GetComponent<Shooter>();
-		if (!shooter) return;
-		shooter.Value.owner = Optional<Controller>.None;
+		if (shooter) shooter.Value.owner = Optional<Controller>.None;
 	}
 
 	/**
@@ -155,7 +153,8 @@ public abstract class Pawn : MonoBehaviour {
 	 * </summary>
 	 */
 	public virtual bool Shoot() {
-		return shooter.Shoot();
+		if (!shooter) return false;
+		return shooter.Value.Shoot();
 	}
 
 	public virtual void Start() {

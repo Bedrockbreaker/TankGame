@@ -221,8 +221,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller:
     value: {fileID: 0}
-  shooter: {fileID: 5549354520312236998}
+  shooter:
+    value: {fileID: 5549354520312236998}
   <Movement>k__BackingField: {fileID: 95875521669068994}
+  <StatusEffectManager>k__BackingField: {fileID: 267570135782519702}
   autoPossessByController: 
   cameraTransform: {fileID: 753301483018660245}
 --- !u!114 &95875521669068994
