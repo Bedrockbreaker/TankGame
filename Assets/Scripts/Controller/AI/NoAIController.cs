@@ -9,7 +9,7 @@ using Util;
  */
 public class NoAIController : AIController {
 
-	public bool originalIsKinematic;
+	protected bool originalIsKinematic;
 
 	protected override void HandleInput() { }
 
