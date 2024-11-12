@@ -245,7 +245,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pawn:
     value: {fileID: 0}
-  originalIsKinematic: 0
   other: {fileID: 944387070}
 --- !u!114 &387328225
 MonoBehaviour:
@@ -498,6 +497,8 @@ GameObject:
   - component: {fileID: 944387066}
   - component: {fileID: 944387070}
   - component: {fileID: 944387071}
+  - component: {fileID: 944387073}
+  - component: {fileID: 944387072}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -649,8 +650,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pawn:
     value: {fileID: 0}
-  originalIsKinematic: 0
   other: {fileID: 387328225}
+--- !u!114 &944387072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944387064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bc459cd78f3e024791f54b972452f67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Pawn>k__BackingField: {fileID: 944387073}
+--- !u!114 &944387073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944387064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3b6faa706bd833429e71cf4d4741bbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller:
+    value: {fileID: 0}
+  shooter:
+    value: {fileID: 0}
+  <Movement>k__BackingField: {fileID: 0}
+  <StatusEffectManager>k__BackingField: {fileID: 944387072}
+  autoPossessByController: 
+  cameraTransform: {fileID: 0}
 --- !u!1001 &1033886286
 PrefabInstance:
   m_ObjectHideFlags: 0
