@@ -9,15 +9,14 @@ using Util;
 public class InstantHealthEffect : StatusEffect {
 
 	public InstantHealthEffect(
-		float duration,
-		int level,
+		float amount,
 		Optional<Controller> appliedBy
-	) : base(duration, level, appliedBy) { }
+	) : base(0, amount, appliedBy) { }
 
 	public override void Apply(Pawn pawn) {
 		if (!pawn.TryGetComponent<Health>(out var health)) return;
 
-		health.Heal(Level * 10f);
+		health.Heal(Strength);
 		Remove(pawn);
 	}
 }

@@ -21,7 +21,6 @@ public class CursedProjectile : Projectile {
 		)) {
 			statusEffectManager.Apply(new MortalCoilEffect(
 				effectDurationSeconds,
-				1,
 				owner
 			));
 		}

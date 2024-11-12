@@ -24,8 +24,14 @@ public class StatusEffectManager : MonoBehaviour {
 	 * </summary>
 	 */
 	public void Apply(StatusEffect effect) {
-		Effects.Add(effect);
-		effect.Apply(Pawn);
+		Optional<StatusEffect> currentEffect
+			= Effects.Find(e => e.GetType() == effect.GetType());
+		if (currentEffect) {
+			currentEffect.Value.Reapply(effect);
+		} else {
+			Effects.Add(effect);
+			effect.Apply(Pawn);
+		}
 	}
 
 	/**

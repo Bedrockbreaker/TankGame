@@ -11,9 +11,9 @@ public class RegenEffect : StatusEffect {
 
 	public RegenEffect(
 		float duration,
-		int level,
+		float strength,
 		Optional<Controller> appliedBy
-	) : base(duration, level, appliedBy) { }
+	) : base(duration, strength, appliedBy) { }
 
 	public Optional<Health> Health { get; protected set; } = Optional<Health>.None;
 
@@ -25,6 +25,6 @@ public class RegenEffect : StatusEffect {
 		base.Tick(pawn);
 
 		if (!Health) return;
-		Health.Value.Heal(Level * Time.deltaTime * 10f);
+		Health.Value.Heal(Strength * Time.deltaTime * 10f);
 	}
 }

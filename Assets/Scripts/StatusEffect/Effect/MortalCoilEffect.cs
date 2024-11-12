@@ -1,3 +1,5 @@
+using System;
+
 using Util;
 
 /**
@@ -10,9 +12,14 @@ public class MortalCoilEffect : StatusEffect {
 
 	public MortalCoilEffect(
 		float duration,
-		int level,
 		Optional<Controller> appliedBy
-	) : base(duration, level, appliedBy) { }
+	) : base(duration, 1, appliedBy) { }
+
+	public override void Reapply(StatusEffect newEffect) {
+		float oldDuration = Duration;
+		base.Reapply(newEffect);
+		Duration = Math.Min(oldDuration, newEffect.Duration);
+	}
 
 	public override void Remove(Pawn pawn, bool clear = false) {
 		base.Remove(pawn, clear);

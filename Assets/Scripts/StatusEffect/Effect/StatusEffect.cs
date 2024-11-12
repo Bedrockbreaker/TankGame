@@ -1,3 +1,5 @@
+using System;
+
 using UnityEngine;
 
 using Util;
@@ -12,14 +14,20 @@ public abstract class StatusEffect {
 	[field: SerializeField]
 	public float Duration { get; protected set; }
 	[field: SerializeField]
-	public int Level { get; protected set; }
+	public float Strength { get; protected set; }
 	[field: SerializeField]
 	public Optional<Controller> AppliedBy { get; protected set; }
 
-	public StatusEffect(float duration, int level, Optional<Controller> appliedBy) {
+	public StatusEffect(float duration, float strength, Optional<Controller> appliedBy) {
 		Duration = duration;
-		Level = level;
+		Strength = strength;
 		AppliedBy = appliedBy;
+	}
+
+	public virtual void Reapply(StatusEffect newEffect) {
+		Duration = Math.Max(Duration, newEffect.Duration);
+		Strength = Math.Max(Strength, newEffect.Strength);
+		AppliedBy = newEffect.AppliedBy;
 	}
 
 	/**

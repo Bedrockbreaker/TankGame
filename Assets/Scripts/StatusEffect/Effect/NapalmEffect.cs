@@ -11,11 +11,17 @@ public class NapalmEffect : StatusEffect {
 
 	public NapalmEffect(
 		float duration,
-		int level,
+		float strength,
 		Optional<Controller> appliedBy
-	) : base(duration, level, appliedBy) { }
+	) : base(duration, strength, appliedBy) { }
 
 	public Optional<Health> Health { get; protected set; } = Optional<Health>.None;
+
+	public override void Reapply(StatusEffect newEffect) {
+		float oldStrength = Strength;
+		base.Reapply(newEffect);
+		Strength = oldStrength + newEffect.Strength;
+	}
 
 	public override void Apply(Pawn pawn) {
 		Health = pawn.GetComponent<Health>();
@@ -25,6 +31,6 @@ public class NapalmEffect : StatusEffect {
 		base.Tick(pawn);
 
 		if (!Health) return;
-		Health.Value.Damage(Level * Time.deltaTime * 10f, AppliedBy);
+		Health.Value.Damage(Strength * Time.deltaTime * 10f, AppliedBy);
 	}
 }
