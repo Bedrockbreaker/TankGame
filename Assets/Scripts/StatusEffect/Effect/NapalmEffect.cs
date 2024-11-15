@@ -9,7 +9,6 @@ using Util;
  */
 public class NapalmEffect : StatusEffect {
 
-	[Template]
 	public NapalmEffect(
 		float duration,
 		float strength,

@@ -15,7 +15,6 @@ public class InstantHealthEffect : StatusEffect {
 		Optional<Controller> appliedBy
 	) : base(duration, amount, appliedBy) { }
 
-	[Template]
 	public InstantHealthEffect(
 		float amount,
 		Optional<Controller> appliedBy
