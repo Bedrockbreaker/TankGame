@@ -40,6 +40,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeadEndW
       objectReference: {fileID: 0}
+    - target: {fileID: 3147886107162667321, guid: 5a604a512e113e5448b3a9d64a4e38cb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3147886107162667321, guid: 5a604a512e113e5448b3a9d64a4e38cb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259494294004722061, guid: 5a604a512e113e5448b3a9d64a4e38cb, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259494294004722061, guid: 5a604a512e113e5448b3a9d64a4e38cb, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259494294004722061, guid: 5a604a512e113e5448b3a9d64a4e38cb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8270423779349755466, guid: 5a604a512e113e5448b3a9d64a4e38cb, type: 3}
       propertyPath: m_LocalScale.x
       value: 1

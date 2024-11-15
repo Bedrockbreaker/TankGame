@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 using AI;
 using AI.Sense;
@@ -20,11 +21,22 @@ public sealed class GameManager : MonoBehaviour {
 
 	public static GameManager Instance { get; private set; }
 
-	private List<GameObject> SpawnPoints { get; } = new();
+	[field: SerializeField, ReadOnly]
+	public List<GameObject> SpawnPoints { get; private set; } = new();
 	private List<Pawn> Pawns { get; } = new();
 	private List<Controller> Controllers { get; } = new();
 	private List<PlayerController> PlayerControllers { get; } = new();
 	private List<Sound> Sounds { get; } = new();
+
+	[Header("Debug")]
+	public bool spawnPlayerAtCamera = true;
+	public int AICount = 4;
+	public GameObject aiControllerPrefab1;
+	public GameObject aiControllerPrefab2;
+	public GameObject aiControllerPrefab3;
+	public GameObject aiControllerPrefab4;
+	public Camera cameraPrefab;
+	private Controller playerControllerRemoveMe;
 
 	[Header("World Objects")]
 	public Camera defaultCamera;
@@ -34,6 +46,7 @@ public sealed class GameManager : MonoBehaviour {
 	public GameObject defaultPawnPrefab;
 	public GameObject defaultControllerPrefab;
 
+	[Header("Blackboard Keys")]
 	public BlackboardKey<List<Sound>> SoundsKey = "Sounds";
 
 	public GameManager() {
@@ -43,6 +56,23 @@ public sealed class GameManager : MonoBehaviour {
 		Instance = this;
 
 		Blackboard.GLOBAL.Set(SoundsKey, Sounds);
+	}
+
+	// HACK
+	public void HackyRespawnPawnPleaseRemoveMe(Controller controller) {
+		Debug.Log("player killed, respawning");
+		Debug.Log("respawning");
+		GameObject spawnPoint = SpawnPoints.Random();
+		GameObject pawnObject = Instantiate(
+			defaultPawnPrefab,
+			spawnPoint.transform.position,
+			spawnPoint.transform.rotation
+		);
+		Pawn pawn = pawnObject.GetComponent<Pawn>();
+		Camera camera = Instantiate(cameraPrefab);
+
+		controller.Possess(pawn);
+		pawn.AttachCamera(camera);
 	}
 
 	private void Awake() {
@@ -58,16 +88,36 @@ public sealed class GameManager : MonoBehaviour {
 	}
 
 	private void Start() {
-		if (PlayerControllers.Count > 0) return;
-		Optional<GameObject> spawnPoint = SpawnPoints.Count > 0
-			? SpawnPoints[0]
-			: Optional<GameObject>.None;
-		SpawnPlayer(defaultPawnPrefab, defaultControllerPrefab, spawnPoint);
+		int spawnCount = (spawnPlayerAtCamera ? 0 : 1) + AICount;
+		List<GameObject> selectedSpawnPoints = SpawnPoints.TakeRandom(spawnCount);
+
+		SpawnPlayer(
+			defaultPawnPrefab,
+			defaultControllerPrefab,
+			spawnPlayerAtCamera
+				? Optional<GameObject>.None
+				: selectedSpawnPoints.Last()
+		);
+
+		for (int i = 0; i < AICount; i++) {
+			GameObject controller = (i % 4) switch {
+				0 => aiControllerPrefab1,
+				1 => aiControllerPrefab2,
+				2 => aiControllerPrefab3,
+				_ => aiControllerPrefab4
+			};
+
+			SpawnPlayer(defaultPawnPrefab, controller, selectedSpawnPoints[i]);
+		}
 	}
 
 	private void Update() {
 		for (int i = Sounds.Count - 1; i >= 0; i--) {
 			Sounds[i].Update();
+		}
+
+		if (!playerControllerRemoveMe.PawnOptional) {
+			HackyRespawnPawnPleaseRemoveMe(playerControllerRemoveMe);
 		}
 	}
 
@@ -105,6 +155,7 @@ public sealed class GameManager : MonoBehaviour {
 		if (PlayerControllers.Count > 1) return;
 
 		controller.Pawn.AttachCamera(defaultCamera);
+		playerControllerRemoveMe = controller;
 	}
 
 	/**

@@ -21,6 +21,7 @@ public abstract class Pawn : MonoBehaviour {
 
 	[SerializeField]
 	protected Optional<Shooter> shooter;
+	protected Optional<Camera> attachedCamera;
 
 	[field: SerializeField]
 	public BasicMovement Movement { get; protected set; }
@@ -84,7 +85,9 @@ public abstract class Pawn : MonoBehaviour {
 	 * Called after the camera is attached
 	 * </summary>
 	 */
-	public abstract void AttachCamera(Camera camera);
+	public virtual void AttachCamera(Camera camera) {
+		attachedCamera = camera;
+	}
 
 	/**
 	 * <summary>
@@ -173,6 +176,7 @@ public abstract class Pawn : MonoBehaviour {
 
 	public virtual void OnDestroy() {
 		UnbindController();
+		if (attachedCamera) attachedCamera.Value.transform.parent = null;
 		GameManager.Instance.UnregisterPawn(this);
 	}
 }

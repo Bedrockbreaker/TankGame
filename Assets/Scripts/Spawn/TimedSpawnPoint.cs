@@ -45,6 +45,7 @@ public class TimedSpawnPoint : MonoBehaviour {
 		if (spawnedObject) return false;
 
 		spawnedObject = Instantiate(prefab, transform.position, transform.rotation);
+		spawnedObject.Value.transform.parent = transform;
 
 		spawnTimer = spawnIntervalSeconds;
 

@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WallNorth
       objectReference: {fileID: 0}
+    - target: {fileID: 2066443336195640511, guid: 76240dd4e87ef404183dcb6d9d7f873b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3413299114213789612, guid: 76240dd4e87ef404183dcb6d9d7f873b, type: 3}
       propertyPath: m_Name
       value: CornerES
@@ -103,6 +107,26 @@ PrefabInstance:
     - target: {fileID: 5658784687105715737, guid: 76240dd4e87ef404183dcb6d9d7f873b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7877614706540877721, guid: 76240dd4e87ef404183dcb6d9d7f873b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.38268343
+      objectReference: {fileID: 0}
+    - target: {fileID: 7877614706540877721, guid: 76240dd4e87ef404183dcb6d9d7f873b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7877614706540877721, guid: 76240dd4e87ef404183dcb6d9d7f873b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.92387956
+      objectReference: {fileID: 0}
+    - target: {fileID: 7877614706540877721, guid: 76240dd4e87ef404183dcb6d9d7f873b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7877614706540877721, guid: 76240dd4e87ef404183dcb6d9d7f873b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -135
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

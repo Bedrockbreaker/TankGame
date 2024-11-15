@@ -2,12 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Unity.AI.Navigation;
+
 using UnityEngine;
 
 public class MapGenerator : MonoBehaviour {
 
 	protected Room[,] cells;
 	protected List<Room>[,] quantumCells;
+
+	[Header("Navigation")]
+	[SerializeField]
+	protected NavMeshSurface navSurface;
 
 	[Header("Rooms")]
 	public List<Room> rooms = new();
@@ -21,10 +27,18 @@ public class MapGenerator : MonoBehaviour {
 
 	[Header("Random")]
 	public long seed = 0;
+	// TODO: remove lotd, use seed (generated from date) given to Generate()
+	public bool levelOfTheDay = false;
 
 	protected List<Tuple<int, int>> Initialize(long seed = 0) {
 		if (seed == 0) {
-			seed = this.seed == 0 ? DateTime.Now.Ticks : this.seed;
+			seed = this.seed == 0
+				? (
+					levelOfTheDay
+						? (long)new TimeSpan(DateTime.Now.Ticks).TotalDays
+						: DateTime.Now.Ticks
+				)
+				: this.seed;
 		}
 		this.seed = seed;
 		UnityEngine.Random.InitState((int)seed);
@@ -48,6 +62,8 @@ public class MapGenerator : MonoBehaviour {
 				} else if (y == cellsVertical - 1) {
 					quantumCells[x, y].RemoveAll(room => room.Connections.south);
 				}
+
+				// Propagate(x, y);
 
 				if (quantumCells[x, y].Any(room => startRooms.Contains(room))) {
 					initialCells.Add(new Tuple<int, int>(x, y));
@@ -80,7 +96,6 @@ public class MapGenerator : MonoBehaviour {
 
 			Room room = quantumCells[targetX, targetY][UnityEngine.Random.Range(0, minEntropy)];
 			quantumCells[targetX, targetY] = new List<Room>() { room };
-			Debug.Log($"Collapsed {room.name} at {targetX}, {targetY}");
 
 			Propagate(targetX, targetY);
 		}
@@ -214,5 +229,7 @@ public class MapGenerator : MonoBehaviour {
 				room.transform.parent = gameObject.transform;
 			}
 		}
+
+		navSurface.BuildNavMesh();
 	}
 }
