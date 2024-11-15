@@ -10,6 +10,13 @@ using Util;
  */
 public class MortalCoilEffect : StatusEffect {
 
+	// FIXME: remove this constructor once TemplatedTypeDrawer is fixed
+	public MortalCoilEffect(
+		float duration,
+		float strength,
+		Optional<Controller> appliedBy
+	) : base(duration, strength, appliedBy) { }
+
 	public MortalCoilEffect(
 		float duration,
 		Optional<Controller> appliedBy

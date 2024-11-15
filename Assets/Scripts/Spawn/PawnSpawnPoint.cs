@@ -5,7 +5,7 @@ using UnityEngine;
  * Represents a valid spawn (position and rotation) for any pawn/controller
  * </summary>
  */
-public class SpawnPoint : MonoBehaviour {
+public class PawnSpawnPoint : MonoBehaviour {
 
 	private void Start() {
 		GameManager.Instance.RegisterSpawnPoint(gameObject);
