@@ -26,8 +26,10 @@ public sealed class GameManager : MonoBehaviour {
 	private List<PlayerController> PlayerControllers { get; } = new();
 	private List<Sound> Sounds { get; } = new();
 
-	[Header("Default World Objects")]
+	[Header("World Objects")]
 	public Camera defaultCamera;
+	public MapGenerator mapGenerator;
+
 	[Header("Default Prefabs")]
 	public GameObject defaultPawnPrefab;
 	public GameObject defaultControllerPrefab;
@@ -47,9 +49,12 @@ public sealed class GameManager : MonoBehaviour {
 		// TODO: strip MonoBehavior from GameManager. Put this into the constructor.
 		if (Instance != this) {
 			Destroy(gameObject);
+			return;
 		} else {
 			DontDestroyOnLoad(gameObject);
 		}
+
+		mapGenerator.Generate();
 	}
 
 	private void Start() {
