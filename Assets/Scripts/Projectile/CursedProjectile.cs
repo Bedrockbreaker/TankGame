@@ -9,13 +9,7 @@ public class CursedProjectile : Projectile {
 
 	public float effectDurationSeconds = 10;
 
-	public override void Start() {
-		base.Start();
-
-		OnContact += Hit;
-	}
-
-	public void Hit(Collider other) {
+	public override void Hit(Collider other) {
 		if (other.TryGetComponent<StatusEffectManager>(
 			out var statusEffectManager
 		)) {

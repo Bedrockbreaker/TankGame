@@ -1,3 +1,5 @@
+using UnityEngine;
+
 using Util;
 
 /**
@@ -13,5 +15,11 @@ public abstract class Projectile : ContactListener {
 
 	public virtual void Start() {
 		Destroy(gameObject, lifetime);
+
+		OnContact += Hit;
+	}
+
+	public virtual void Hit(Collider other) {
+
 	}
 }

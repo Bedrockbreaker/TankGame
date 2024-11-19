@@ -164,10 +164,14 @@ PrefabInstance:
     - target: {fileID: 4816856013628135282, guid: 78aa8493410838f4bb252215f4a039d9, type: 3}
       propertyPath: prefab
       value: 
-      objectReference: {fileID: 6777183664534749654, guid: 046f434cc244e3f44b1572180439555b, type: 3}
+      objectReference: {fileID: 6777183664534749654, guid: 2aa43211f0d652e48a079274c1b28083, type: 3}
+    - target: {fileID: 4816856013628135282, guid: 78aa8493410838f4bb252215f4a039d9, type: 3}
+      propertyPath: spawnDelaySeconds
+      value: -50
+      objectReference: {fileID: 0}
     - target: {fileID: 4816856013628135282, guid: 78aa8493410838f4bb252215f4a039d9, type: 3}
       propertyPath: spawnIntervalSeconds
-      value: 30
+      value: 60
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -234,10 +238,14 @@ PrefabInstance:
     - target: {fileID: 4816856013628135282, guid: 78aa8493410838f4bb252215f4a039d9, type: 3}
       propertyPath: prefab
       value: 
-      objectReference: {fileID: 6777183664534749654, guid: 046f434cc244e3f44b1572180439555b, type: 3}
+      objectReference: {fileID: 6777183664534749654, guid: 2aa43211f0d652e48a079274c1b28083, type: 3}
+    - target: {fileID: 4816856013628135282, guid: 78aa8493410838f4bb252215f4a039d9, type: 3}
+      propertyPath: spawnDelaySeconds
+      value: -50
+      objectReference: {fileID: 0}
     - target: {fileID: 4816856013628135282, guid: 78aa8493410838f4bb252215f4a039d9, type: 3}
       propertyPath: spawnIntervalSeconds
-      value: 30
+      value: 60
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -304,10 +312,14 @@ PrefabInstance:
     - target: {fileID: 4816856013628135282, guid: 78aa8493410838f4bb252215f4a039d9, type: 3}
       propertyPath: prefab
       value: 
-      objectReference: {fileID: 6777183664534749654, guid: 046f434cc244e3f44b1572180439555b, type: 3}
+      objectReference: {fileID: 6777183664534749654, guid: 2aa43211f0d652e48a079274c1b28083, type: 3}
+    - target: {fileID: 4816856013628135282, guid: 78aa8493410838f4bb252215f4a039d9, type: 3}
+      propertyPath: spawnDelaySeconds
+      value: -50
+      objectReference: {fileID: 0}
     - target: {fileID: 4816856013628135282, guid: 78aa8493410838f4bb252215f4a039d9, type: 3}
       propertyPath: spawnIntervalSeconds
-      value: 30
+      value: 60
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -436,10 +448,14 @@ PrefabInstance:
     - target: {fileID: 4816856013628135282, guid: 78aa8493410838f4bb252215f4a039d9, type: 3}
       propertyPath: prefab
       value: 
-      objectReference: {fileID: 6777183664534749654, guid: 046f434cc244e3f44b1572180439555b, type: 3}
+      objectReference: {fileID: 6777183664534749654, guid: 2aa43211f0d652e48a079274c1b28083, type: 3}
+    - target: {fileID: 4816856013628135282, guid: 78aa8493410838f4bb252215f4a039d9, type: 3}
+      propertyPath: spawnDelaySeconds
+      value: -50
+      objectReference: {fileID: 0}
     - target: {fileID: 4816856013628135282, guid: 78aa8493410838f4bb252215f4a039d9, type: 3}
       propertyPath: spawnIntervalSeconds
-      value: 30
+      value: 60
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

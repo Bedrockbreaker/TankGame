@@ -17,6 +17,9 @@ public abstract class Controller : MonoBehaviour {
 	[SerializeField]
 	private Optional<Pawn> pawn = Optional<Pawn>.None;
 
+	[field: SerializeField]
+	public int Score { get; protected set; }
+
 	public Optional<Pawn> PawnOptional {
 		get => pawn;
 		protected set {
@@ -66,6 +69,16 @@ public abstract class Controller : MonoBehaviour {
 	 */
 	public virtual void Unpossess() {
 		PawnOptional = Optional<Pawn>.None;
+	}
+
+	public virtual void AddScore(int amount) {
+		Score += amount;
+		Debug.Log($"Added score {amount}, total: {Score}");
+	}
+
+	public virtual void RemoveScore(int amount) {
+		Score -= amount;
+		Debug.Log($"Removed score {amount}, total: {Score}");
 	}
 
 	public virtual void Start() {

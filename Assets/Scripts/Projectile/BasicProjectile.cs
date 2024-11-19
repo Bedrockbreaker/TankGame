@@ -14,7 +14,9 @@ public class BasicProjectile : Projectile {
 		base.Start();
 
 		Damager.owner = owner;
+	}
 
-		OnContact += (other) => Destroy(gameObject);
+	public override void Hit(Collider other) {
+		Destroy(gameObject);
 	}
 }

@@ -10,13 +10,7 @@ public class IncendiaryProjectile : Projectile {
 	public float effectDurationSeconds = 3;
 	public int effectLevel = 1;
 
-	public override void Start() {
-		base.Start();
-
-		OnContact += Hit;
-	}
-
-	public void Hit(Collider other) {
+	public override void Hit(Collider other) {
 		if (other.TryGetComponent<StatusEffectManager>(
 			out var statusEffectManager
 		)) {
