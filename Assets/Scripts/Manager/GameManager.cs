@@ -60,8 +60,6 @@ public sealed class GameManager : MonoBehaviour {
 
 	// HACK
 	public void HackyRespawnPawnPleaseRemoveMe(Controller controller) {
-		Debug.Log("player killed, respawning");
-		Debug.Log("respawning");
 		GameObject spawnPoint = SpawnPoints.Random();
 		GameObject pawnObject = Instantiate(
 			defaultPawnPrefab,
