@@ -36,10 +36,21 @@ public class Health : MonoBehaviour {
 		}
 	}
 
+	/**
+	 * <summary>
+	 * Heal this object by an amount.<br/>
+	 * Clamps to the maximum health
+	 * </summary>
+	 */
 	public virtual void Heal(float amount) {
 		CurrentHealth = Math.Min(CurrentHealth + amount, MaxHealth);
 	}
 
+	/**
+	 * <summary>
+	 * Sets the health to 0 and invokes <see cref="OnDeath"/>
+	 * </summary>
+	 */
 	public virtual void SetDead(Optional<Controller> attacker) {
 		CurrentHealth = 0f;
 		OnDeath?.Invoke(attacker); // this.OnDeath?.Invoke(...)

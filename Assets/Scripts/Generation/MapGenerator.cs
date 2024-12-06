@@ -6,6 +6,11 @@ using Unity.AI.Navigation;
 
 using UnityEngine;
 
+/**
+ * <summary>
+ * Generates a map from a list of rooms using Wave Function Collapse
+ * </summary>
+ */
 public class MapGenerator : MonoBehaviour {
 
 	protected Room[,] cells;
@@ -30,6 +35,11 @@ public class MapGenerator : MonoBehaviour {
 	// TODO: remove lotd, use seed (generated from date) given to Generate()
 	public bool levelOfTheDay = false;
 
+	/**
+	 * <summary>
+	 * Initialize the map and its starting conditions
+	 * </summary>
+	 */
 	protected List<Tuple<int, int>> Initialize(long seed = 0) {
 		if (seed == 0) {
 			seed = this.seed == 0
@@ -74,6 +84,11 @@ public class MapGenerator : MonoBehaviour {
 		return initialCells;
 	}
 
+	/**
+	 * <summary>
+	 * Collapse quantum cells until each cell has only one possible room
+	 * </summary>
+	 */
 	protected void Collapse() {
 		while (true) {
 			int minEntropy = int.MaxValue;
@@ -101,6 +116,11 @@ public class MapGenerator : MonoBehaviour {
 		}
 	}
 
+	/**
+	 * <summary>
+	 * Propagate the collapse of a cell to its neighbors
+	 * </summary>
+	 */
 	protected void Propagate(int x, int y) {
 		Queue<Tuple<int, int>> queue = new();
 		queue.Enqueue(new Tuple<int, int>(x, y));
@@ -151,6 +171,11 @@ public class MapGenerator : MonoBehaviour {
 		}
 	}
 
+	/**
+	 * <summary>
+	 * Remove all rooms that are not reachable from the start room
+	 * </summary>
+	 */
 	public void PruneUnreachableRooms(int x, int y) {
 		HashSet<Tuple<int, int>> visited = new();
 		Queue<Tuple<int, int>> queue = new();
@@ -190,6 +215,11 @@ public class MapGenerator : MonoBehaviour {
 		}
 	}
 
+	/**
+	 * <summary>
+	 * Generate the map
+	 * </summary>
+	 */
 	public void Generate(long seed = 0) {
 		List<Tuple<int, int>> initialCells = Initialize(seed);
 

@@ -4,6 +4,11 @@ using UnityEngine;
 
 using Util;
 
+/**
+ * <summary>
+ * Inspector drawer for Optionals
+ * </summary>
+ */
 [CustomPropertyDrawer(typeof(Optional<>))]
 public class OptionalDrawer : PropertyDrawer {
 	public override void OnGUI(

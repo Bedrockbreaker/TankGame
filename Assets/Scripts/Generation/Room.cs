@@ -3,6 +3,11 @@ using System;
 
 using UnityEngine;
 
+/**
+ * <summary>
+ * A room
+ * </summary>
+ */
 public class Room : MonoBehaviour {
 
 	[field: SerializeField]

@@ -6,7 +6,7 @@ using Util;
 
 /**
  * <summary>
- * A custom inspector drawer for the ReadOnly attribute
+ * Inspector drawer for ReadOnly fields
  * </summary>
  */
 [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]

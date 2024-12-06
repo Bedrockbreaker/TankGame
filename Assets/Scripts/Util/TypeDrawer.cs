@@ -6,6 +6,11 @@ using UnityEditor;
 
 using UnityEngine;
 
+/**
+ * <summary>
+ * Inspector drawer that displays a dropdown of types
+ * </summary>
+ */
 [CustomPropertyDrawer(typeof(TypeAttribute))]
 public class TypeDrawer : PropertyDrawer {
 

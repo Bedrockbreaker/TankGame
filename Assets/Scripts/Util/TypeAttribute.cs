@@ -2,6 +2,11 @@ using System;
 
 using UnityEngine;
 
+/**
+ * <summary>
+ * An attribute for marking a serializable field as a type
+ * </summary>
+ */
 public class TypeAttribute : PropertyAttribute {
 
 	public Type type;

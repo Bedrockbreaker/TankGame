@@ -19,6 +19,11 @@ public abstract class Projectile : ContactListener {
 		OnContact += Hit;
 	}
 
+	/**
+	 * <summary>
+	 * Called when the projectile hits something
+	 * </summary>
+	 */
 	public virtual void Hit(Collider other) {
 
 	}

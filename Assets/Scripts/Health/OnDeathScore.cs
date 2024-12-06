@@ -2,6 +2,11 @@ using UnityEngine;
 
 using Util;
 
+/**
+ * <summary>
+ * Adds/removes score to the attacker when this object dies
+ * </summary>
+ */
 public class OnDeathScore : MonoBehaviour {
 
 	public int scoreRewarded;
@@ -11,6 +16,11 @@ public class OnDeathScore : MonoBehaviour {
 		health.OnDeath += OnDeath;
 	}
 
+	/**
+	 * <summary>
+	 * Listener for <see cref="Health.OnDeath"/>
+	 * </summary>
+	 */
 	public void OnDeath(Optional<Controller> attacker) {
 		if (!attacker) return;
 

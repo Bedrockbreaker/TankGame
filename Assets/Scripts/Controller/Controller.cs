@@ -71,14 +71,22 @@ public abstract class Controller : MonoBehaviour {
 		PawnOptional = Optional<Pawn>.None;
 	}
 
+	/**
+	 * <summary>
+	 * Add the given amount of score
+	 * </summary>
+	 */
 	public virtual void AddScore(int amount) {
 		Score += amount;
-		Debug.Log($"Added score {amount}, total: {Score}");
 	}
 
+	/**
+	 * <summary>
+	 * Subtract the given amount of score
+	 * </summary>
+	 */
 	public virtual void RemoveScore(int amount) {
 		Score -= amount;
-		Debug.Log($"Removed score {amount}, total: {Score}");
 	}
 
 	public virtual void Start() {
