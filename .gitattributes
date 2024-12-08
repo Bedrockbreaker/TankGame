@@ -1,3 +1,7 @@
+# Linguist
+
+Assets/TextMesh Pro/** linguist-vendored
+
 # Default all files to binary
 
 * -text
