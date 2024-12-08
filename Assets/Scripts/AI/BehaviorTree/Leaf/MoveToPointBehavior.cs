@@ -64,7 +64,7 @@ namespace AI.BehaviorTree {
 			// TODO: ensure child classes also update agent destination
 			if (state != NodeState.Running) return state;
 
-			if (agent.isPathStale) {
+			if (!controller.PawnOptional || agent.isPathStale) {
 				state = NodeState.Failure;
 			}
 
