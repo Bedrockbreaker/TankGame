@@ -21,6 +21,8 @@ public abstract class Controller : MonoBehaviour {
 	public int Score { get; protected set; } = 0;
 	[field: SerializeField]
 	public int Lives { get; protected set; } = 1;
+	[field: SerializeField]
+	public int ScoreToLifeRatio { get; protected set; } = 1000;
 
 	public Optional<Pawn> PawnOptional {
 		get => pawn;
@@ -75,11 +77,15 @@ public abstract class Controller : MonoBehaviour {
 
 	/**
 	 * <summary>
-	 * Add the given amount of score
+	 * Add the given amount of score.<br/>
+	 * Automatically add lives if the score passes a multiple of ScoreToLifeRatio
 	 * </summary>
 	 */
-	public virtual void AddScore(int amount) {
+	public virtual int AddScore(int amount) {
+		int delta = (Score % ScoreToLifeRatio) + amount;
 		Score += amount;
+		if (delta >= ScoreToLifeRatio) AddLives(delta / ScoreToLifeRatio);
+		return Score;
 	}
 
 	/**
@@ -87,8 +93,9 @@ public abstract class Controller : MonoBehaviour {
 	 * Subtract the given amount of score
 	 * </summary>
 	 */
-	public virtual void RemoveScore(int amount) {
+	public virtual int RemoveScore(int amount) {
 		Score -= amount;
+		return Score;
 	}
 
 	/**
