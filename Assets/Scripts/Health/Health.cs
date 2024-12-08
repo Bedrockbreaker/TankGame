@@ -13,12 +13,31 @@ public delegate void OnDeathHandler(Optional<Controller> attacker);
  */
 public class Health : MonoBehaviour {
 
-	[field: SerializeField]
-	public float MaxHealth { get; protected set; } = 100f;
-	[field: SerializeField]
-	public float CurrentHealth { get; protected set; } = 100f;
+	[SerializeField]
+	private float currentHealth;
+	[SerializeField]
+	private float maxHealth;
+
+	public float MaxHealth {
+		get => maxHealth;
+		protected set {
+			bool changed = value != maxHealth;
+			maxHealth = value;
+			CurrentHealth = Math.Min(CurrentHealth, MaxHealth);
+			if (changed) OnHealthChanged?.Invoke();
+		}
+	}
+	public float CurrentHealth {
+		get => currentHealth;
+		protected set {
+			bool changed = value != currentHealth;
+			currentHealth = value;
+			if (changed) OnHealthChanged?.Invoke();
+		}
+	}
 	public bool IsDead => CurrentHealth <= 0f;
 
+	public event Action OnHealthChanged;
 	public event OnDeathHandler OnDeath;
 
 	/**
@@ -56,5 +75,9 @@ public class Health : MonoBehaviour {
 		OnDeath?.Invoke(attacker); // this.OnDeath?.Invoke(...)
 
 		Destroy(gameObject);
+	}
+
+	public virtual void Start() {
+		CurrentHealth = currentHealth;
 	}
 }

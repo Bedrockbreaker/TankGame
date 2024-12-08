@@ -18,9 +18,12 @@ public abstract class Pawn : MonoBehaviour {
 	[ReadOnly]
 	[SerializeField]
 	private Optional<Controller> controller = Optional<Controller>.None;
+	private bool originalHealthbarBackfaceEnabled;
 
 	[SerializeField]
 	protected Optional<Shooter> shooter;
+	[SerializeField]
+	protected Optional<Healthbar> healthbar;
 	protected Optional<Camera> attachedCamera;
 
 	[field: SerializeField]
@@ -67,6 +70,10 @@ public abstract class Pawn : MonoBehaviour {
 		ControllerOptional = controller;
 
 		if (shooter) shooter.Value.owner = controller;
+		if (controller is PlayerController && healthbar) {
+			originalHealthbarBackfaceEnabled = healthbar.Value.BackfaceEnabled;
+			healthbar.Value.SetBackfaceEnabled(false);
+		}
 	}
 
 	/**
@@ -75,6 +82,10 @@ public abstract class Pawn : MonoBehaviour {
 	 * </summary>
 	 */
 	public virtual void UnbindController() {
+		if (Controller is PlayerController && healthbar) {
+			healthbar.Value.SetBackfaceEnabled(originalHealthbarBackfaceEnabled);
+		}
+
 		ControllerOptional = Optional<Controller>.None;
 
 		if (shooter) shooter.Value.owner = Optional<Controller>.None;

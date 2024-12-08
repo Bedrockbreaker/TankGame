@@ -16,11 +16,23 @@ public abstract class Controller : MonoBehaviour {
 	[ReadOnly]
 	[SerializeField]
 	private Optional<Pawn> pawn = Optional<Pawn>.None;
+	[SerializeField]
+	private int lives = 3;
+	[SerializeField]
+	private int score;
 
-	[field: SerializeField]
-	public int Score { get; protected set; } = 0;
-	[field: SerializeField]
-	public int Lives { get; protected set; } = 1;
+	public virtual int Score {
+		get => score;
+		protected set {
+			score = value;
+		}
+	}
+	public virtual int Lives {
+		get => lives;
+		protected set {
+			lives = value;
+		}
+	}
 	[field: SerializeField]
 	public int ScoreToLifeRatio { get; protected set; } = 1000;
 
@@ -120,6 +132,9 @@ public abstract class Controller : MonoBehaviour {
 
 	public virtual void Start() {
 		GameManager.Instance.RegisterController(this);
+
+		Score = score;
+		Lives = lives;
 	}
 
 	public virtual void Update() {
