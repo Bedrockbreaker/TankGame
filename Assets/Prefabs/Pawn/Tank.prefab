@@ -264,7 +264,7 @@ MonoBehaviour:
   cooldown: 0.5
   volume: 5
   spawnTransform: {fileID: 4984905055512820253}
-  projectilePrefab: {fileID: 5402592200804750428, guid: cfceb5c934b728c45a70c8c10f265126, type: 3}
+  projectilePrefab: {fileID: -4313645151380586995, guid: cfceb5c934b728c45a70c8c10f265126, type: 3}
   owner:
     value: {fileID: 0}
 --- !u!114 &4819798683100222286

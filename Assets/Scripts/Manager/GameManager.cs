@@ -22,7 +22,7 @@ public sealed class GameManager : MonoBehaviour {
 	public static GameManager Instance { get; private set; }
 
 	[field: SerializeField, ReadOnly]
-	public List<GameObject> SpawnPoints { get; private set; } = new();
+	public List<PawnSpawnPoint> SpawnPoints { get; private set; } = new();
 	private List<Pawn> Pawns { get; } = new();
 	private List<Controller> Controllers { get; } = new();
 	private List<PlayerController> PlayerControllers { get; } = new();
@@ -31,10 +31,10 @@ public sealed class GameManager : MonoBehaviour {
 	[Header("Debug")]
 	public bool spawnPlayerAtCamera = true;
 	public int AICount = 4;
-	public GameObject aiControllerPrefab1;
-	public GameObject aiControllerPrefab2;
-	public GameObject aiControllerPrefab3;
-	public GameObject aiControllerPrefab4;
+	public AIController aiControllerPrefab1;
+	public AIController aiControllerPrefab2;
+	public AIController aiControllerPrefab3;
+	public AIController aiControllerPrefab4;
 	public Camera cameraPrefab;
 	private Controller playerControllerRemoveMe;
 
@@ -43,8 +43,8 @@ public sealed class GameManager : MonoBehaviour {
 	public MapGenerator mapGenerator;
 
 	[Header("Default Prefabs")]
-	public GameObject defaultPawnPrefab;
-	public GameObject defaultControllerPrefab;
+	public Pawn defaultPawnPrefab;
+	public Controller defaultControllerPrefab;
 
 	[Header("Blackboard Keys")]
 	public BlackboardKey<List<Sound>> SoundsKey = "Sounds";
@@ -60,13 +60,12 @@ public sealed class GameManager : MonoBehaviour {
 
 	// HACK
 	public void HackyRespawnPawnPleaseRemoveMe(Controller controller) {
-		GameObject spawnPoint = SpawnPoints.Random();
-		GameObject pawnObject = Instantiate(
+		PawnSpawnPoint spawnPoint = SpawnPoints.Random();
+		Pawn pawn = Instantiate(
 			defaultPawnPrefab,
 			spawnPoint.transform.position,
 			spawnPoint.transform.rotation
 		);
-		Pawn pawn = pawnObject.GetComponent<Pawn>();
 		Camera camera = Instantiate(cameraPrefab);
 
 		controller.Possess(pawn);
@@ -87,18 +86,18 @@ public sealed class GameManager : MonoBehaviour {
 
 	private void Start() {
 		int spawnCount = (spawnPlayerAtCamera ? 0 : 1) + AICount;
-		List<GameObject> selectedSpawnPoints = SpawnPoints.TakeRandom(spawnCount);
+		List<PawnSpawnPoint> selectedSpawnPoints = SpawnPoints.TakeRandom(spawnCount);
 
 		SpawnPlayer(
 			defaultPawnPrefab,
 			defaultControllerPrefab,
 			spawnPlayerAtCamera
-				? Optional<GameObject>.None
+				? Optional<PawnSpawnPoint>.None
 				: selectedSpawnPoints.Last()
 		);
 
 		for (int i = 0; i < AICount; i++) {
-			GameObject controller = (i % 4) switch {
+			Controller controller = (i % 4) switch {
 				0 => aiControllerPrefab1,
 				1 => aiControllerPrefab2,
 				2 => aiControllerPrefab3,
@@ -124,7 +123,7 @@ public sealed class GameManager : MonoBehaviour {
 	 * Register a spawn point with the game manager
 	 * </summary>
 	 */
-	public void RegisterSpawnPoint(GameObject spawnPoint) {
+	public void RegisterSpawnPoint(PawnSpawnPoint spawnPoint) {
 		SpawnPoints.Add(spawnPoint);
 	}
 
@@ -133,7 +132,7 @@ public sealed class GameManager : MonoBehaviour {
 	 * Unregister a spawn point with the game manager
 	 * </summary>
 	 */
-	public void UnregisterSpawnPoint(GameObject spawnPoint) {
+	public void UnregisterSpawnPoint(PawnSpawnPoint spawnPoint) {
 		SpawnPoints.Remove(spawnPoint);
 	}
 
@@ -196,12 +195,12 @@ public sealed class GameManager : MonoBehaviour {
 	 * If no spawn point is provided and the game is running in production,<br/>
 	 * it will spawn at <see cref="Vector3.zero"/> and <see cref="Quaternion.identity"/>.
 	 * </remarks>
-	 * <seealso cref="SpawnPlayer(GameObject, GameObject, Pose)"/>
+	 * <seealso cref="SpawnPlayer(Pawn, Controller, Pose)"/>
 	 */
 	public void SpawnPlayer(
-		GameObject pawnPrefab,
-		GameObject controllerPrefab,
-		Optional<GameObject> spawnPoint
+		Pawn pawnPrefab,
+		Controller controllerPrefab,
+		Optional<PawnSpawnPoint> spawnPoint
 	) {
 		Pose spawn = spawnPoint
 			? new Pose(spawnPoint.Value.transform.position, spawnPoint.Value.transform.rotation)
@@ -223,26 +222,24 @@ public sealed class GameManager : MonoBehaviour {
 	 * <summary>
 	 * Spawn a new controller and pawn at the given spawn pose.
 	 * </summary>
-	 * <seealso cref="SpawnPlayer(GameObject, GameObject, Optional&lt;GameObject&gt;)"/> 
+	 * <seealso cref="SpawnPlayer(Pawn, Controller, Optional&lt;PawnSpawnPoint&gt;)"/> 
 	 */
 	public void SpawnPlayer(
-		GameObject pawnPrefab,
-		GameObject controllerPrefab,
+		Pawn pawnPrefab,
+		Controller controllerPrefab,
 		Pose spawn
 	) {
-		GameObject pawnObject = Instantiate(
+		Pawn pawn = Instantiate(
 			pawnPrefab,
 			spawn.position,
 			spawn.rotation
 		);
-		Pawn pawn = pawnObject.GetComponent<Pawn>();
 
-		GameObject controllerObject = Instantiate(
+		Controller controller = Instantiate(
 			controllerPrefab,
 			spawn.position,
 			spawn.rotation
 		);
-		Controller controller = controllerObject.GetComponent<Controller>();
 
 		controller.Possess(pawn);
 	}

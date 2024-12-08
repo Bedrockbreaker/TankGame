@@ -245,6 +245,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pawn:
     value: {fileID: 0}
+  <Score>k__BackingField: 0
   other: {fileID: 944387070}
 --- !u!114 &387328225
 MonoBehaviour:
@@ -467,15 +468,15 @@ MonoBehaviour:
   <SpawnPoints>k__BackingField: []
   spawnPlayerAtCamera: 0
   AICount: 4
-  aiControllerPrefab1: {fileID: 3719150049129627919, guid: 97e9b88cb79c5f34ebd706f55615e390, type: 3}
-  aiControllerPrefab2: {fileID: 8880719639094876739, guid: a09652c1f4e429d4a9d4b0455053660d, type: 3}
-  aiControllerPrefab3: {fileID: 6759505114884647628, guid: 673c5b2d4d4a47147947633eb7b1a785, type: 3}
-  aiControllerPrefab4: {fileID: 6104824794905634916, guid: 6b3bc52d8cfe9a3469589cb83b082c82, type: 3}
+  aiControllerPrefab1: {fileID: 170902524211786829, guid: 97e9b88cb79c5f34ebd706f55615e390, type: 3}
+  aiControllerPrefab2: {fileID: 1754845576527966283, guid: a09652c1f4e429d4a9d4b0455053660d, type: 3}
+  aiControllerPrefab3: {fileID: 6954351295629980606, guid: 673c5b2d4d4a47147947633eb7b1a785, type: 3}
+  aiControllerPrefab4: {fileID: 4487799519081073030, guid: 6b3bc52d8cfe9a3469589cb83b082c82, type: 3}
   cameraPrefab: {fileID: 5819694499802510509, guid: 5483815f936d44f469e7d693bc7f1128, type: 3}
   defaultCamera: {fileID: 2071201957}
   mapGenerator: {fileID: 1135242595}
-  defaultPawnPrefab: {fileID: 5357123363669712500, guid: 86a599280b163be438fb7d141df193c2, type: 3}
-  defaultControllerPrefab: {fileID: 8891941884410494154, guid: fc17a89501e4f1c41a04eae541cf04a5, type: 3}
+  defaultPawnPrefab: {fileID: 2592157875988477938, guid: 86a599280b163be438fb7d141df193c2, type: 3}
+  defaultControllerPrefab: {fileID: 919075502905837874, guid: fc17a89501e4f1c41a04eae541cf04a5, type: 3}
 --- !u!4 &502033109
 Transform:
   m_ObjectHideFlags: 0
@@ -659,6 +660,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pawn:
     value: {fileID: 0}
+  <Score>k__BackingField: 0
   other: {fileID: 387328225}
 --- !u!114 &944387072
 MonoBehaviour:

@@ -24,7 +24,7 @@ public abstract class Shooter : MonoBehaviour {
 	protected bool canShoot = true;
 
 	public Transform spawnTransform;
-	public GameObject projectilePrefab;
+	public Projectile projectilePrefab;
 	public Optional<Controller> owner;
 
 	/**

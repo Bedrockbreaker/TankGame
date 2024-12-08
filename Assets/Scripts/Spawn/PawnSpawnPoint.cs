@@ -8,10 +8,10 @@ using UnityEngine;
 public class PawnSpawnPoint : MonoBehaviour {
 
 	protected void Awake() {
-		GameManager.Instance.RegisterSpawnPoint(gameObject);
+		GameManager.Instance.RegisterSpawnPoint(this);
 	}
 
 	protected void OnDestroy() {
-		GameManager.Instance.UnregisterSpawnPoint(gameObject);
+		GameManager.Instance.UnregisterSpawnPoint(this);
 	}
 }
