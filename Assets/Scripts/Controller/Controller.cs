@@ -18,7 +18,9 @@ public abstract class Controller : MonoBehaviour {
 	private Optional<Pawn> pawn = Optional<Pawn>.None;
 
 	[field: SerializeField]
-	public int Score { get; protected set; }
+	public int Score { get; protected set; } = 0;
+	[field: SerializeField]
+	public int Lives { get; protected set; } = 1;
 
 	public Optional<Pawn> PawnOptional {
 		get => pawn;
@@ -87,6 +89,26 @@ public abstract class Controller : MonoBehaviour {
 	 */
 	public virtual void RemoveScore(int amount) {
 		Score -= amount;
+	}
+
+	/**
+	 * <summary>
+	 * Add the given amount of lives
+	 * </summary>
+	 */
+	public int AddLives(int amount) {
+		Lives += amount;
+		return Lives;
+	}
+
+	/**
+	 * <summary>
+	 * Remove the given amount of lives
+	 * </summary>
+	 */
+	public int RemoveLives(int amount) {
+		Lives -= amount;
+		return Lives;
 	}
 
 	public virtual void Start() {

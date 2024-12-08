@@ -60,6 +60,11 @@ public sealed class GameManager : MonoBehaviour {
 
 	// HACK
 	public void HackyRespawnPawnPleaseRemoveMe(Controller controller) {
+		if (controller.Lives <= 0) {
+			Debug.Log("Player is dead, not respawning.");
+			return;
+		}
+
 		PawnSpawnPoint spawnPoint = SpawnPoints.Random();
 		Pawn pawn = Instantiate(
 			defaultPawnPrefab,

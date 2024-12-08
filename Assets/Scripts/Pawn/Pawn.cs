@@ -175,6 +175,7 @@ public abstract class Pawn : MonoBehaviour {
 	}
 
 	public virtual void OnDestroy() {
+		if (ControllerOptional) Controller.RemoveLives(1);
 		UnbindController();
 		if (attachedCamera) attachedCamera.Value.transform.parent = null;
 		GameManager.Instance.UnregisterPawn(this);
