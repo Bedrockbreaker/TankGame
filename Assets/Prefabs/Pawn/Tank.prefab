@@ -761,6 +761,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: {fileID: 4819798683100222286}
+  pawn: {fileID: 2592157875988477938}
   healthbar1: {fileID: 416448791716100929}
   healthbar2: {fileID: 1066505941142554874}
   currentHealthText1: {fileID: 97418154515161001}
@@ -1758,6 +1759,7 @@ MonoBehaviour:
     value: {fileID: 5549354520312236998}
   healthbar:
     value: {fileID: 2726725788690690802}
+  <Name>k__BackingField: Tank
   <Movement>k__BackingField: {fileID: 95875521669068994}
   <StatusEffectManager>k__BackingField: {fileID: 267570135782519702}
   autoPossessByController: 

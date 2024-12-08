@@ -27,6 +27,8 @@ public abstract class Pawn : MonoBehaviour {
 	protected Optional<Camera> attachedCamera;
 
 	[field: SerializeField]
+	public string Name { get; protected set; }
+	[field: SerializeField]
 	public BasicMovement Movement { get; protected set; }
 	[field: SerializeField]
 	public StatusEffectManager StatusEffectManager { get; protected set; }

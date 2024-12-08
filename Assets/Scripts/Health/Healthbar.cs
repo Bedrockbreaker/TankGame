@@ -12,6 +12,8 @@ public class Healthbar : MonoBehaviour {
 
 	[SerializeField]
 	protected Health health;
+	[SerializeField]
+	protected Pawn pawn;
 	protected Material healthbarMaterial;
 	[SerializeField]
 	protected Image healthbar1;
@@ -60,6 +62,22 @@ public class Healthbar : MonoBehaviour {
 
 	/**
 	 * <summary>
+	 * Update the name
+	 * </summary>
+	 */
+	public virtual void OnControllerChanged() {
+		string name =
+			pawn.ControllerOptional
+			&& !string.IsNullOrEmpty(pawn.Controller.Name)
+				? pawn.Controller.Name
+				: pawn.Name;
+
+		nameText1.text = name;
+		nameText2.text = name;
+	}
+
+	/**
+	 * <summary>
 	 * Set the backface visibility
 	 * </summary>
 	 */
@@ -81,5 +99,9 @@ public class Healthbar : MonoBehaviour {
 
 		health.OnHealthChanged += OnHealthChanged;
 		OnHealthChanged();
+
+		pawn.OnControllerBound += (Controller _) => OnControllerChanged();
+		pawn.OnCountrollerUnbound += OnControllerChanged;
+		OnControllerChanged();
 	}
 }

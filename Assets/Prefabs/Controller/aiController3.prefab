@@ -46,3 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pawn:
     value: {fileID: 0}
+  lives: 3
+  score: 0
+  <Name>k__BackingField: Echo Ed
+  <ScoreToLifeRatio>k__BackingField: 1000

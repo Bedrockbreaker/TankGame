@@ -21,6 +21,9 @@ public abstract class Controller : MonoBehaviour {
 	[SerializeField]
 	private int score;
 
+
+	[field: SerializeField]
+	public string Name { get; protected set; }
 	public virtual int Score {
 		get => score;
 		protected set {

@@ -48,6 +48,7 @@ MonoBehaviour:
     value: {fileID: 0}
   lives: 3
   score: 0
+  <Name>k__BackingField: Player
   <ScoreToLifeRatio>k__BackingField: 1000
   livesText:
     value: {fileID: 0}
