@@ -10,11 +10,11 @@ using UnityEngine.UI;
  */
 public class Healthbar : MonoBehaviour {
 
+	protected Material healthbarMaterial;
 	[SerializeField]
 	protected Health health;
 	[SerializeField]
 	protected Pawn pawn;
-	protected Material healthbarMaterial;
 	[SerializeField]
 	protected Image healthbar1;
 	[SerializeField]

@@ -4,9 +4,6 @@ using System.Linq;
 using AI;
 using AI.Sense;
 
-using TMPro;
-
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -44,8 +41,7 @@ public sealed class GameManager : MonoBehaviour {
 	[Header("World Objects")]
 	public Camera defaultCamera;
 	public MapGenerator mapGenerator;
-	public TextMeshProUGUI livesText;
-	public TextMeshProUGUI scoreText;
+	public HUD hud;
 
 	[Header("Default Prefabs")]
 	public Pawn defaultPawnPrefab;
@@ -157,8 +153,7 @@ public sealed class GameManager : MonoBehaviour {
 		if (controller is not PlayerController playerController) return;
 
 		PlayerControllers.Add(playerController);
-		playerController.livesText = livesText;
-		playerController.scoreText = scoreText;
+		hud.SetController(playerController);
 
 		if (!controller.PawnOptional) return;
 		if (PlayerControllers.Count > 1) return;

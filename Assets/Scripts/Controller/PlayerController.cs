@@ -1,7 +1,5 @@
 using AI;
 
-using TMPro;
-
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,26 +14,7 @@ public class PlayerController : Controller {
 
 	protected InputAction inputMove;
 	protected InputAction inputShoot;
-
-	public Optional<TextMeshProUGUI> livesText;
-	public Optional<TextMeshProUGUI> scoreText;
-
-	public override int Lives {
-		protected set {
-			base.Lives = value;
-
-			if (!livesText) return;
-			livesText.Value.text = new string('♥', Lives);
-		}
-	}
-	public override int Score {
-		protected set {
-			base.Score = value;
-
-			if (!scoreText) return;
-			scoreText.Value.text = Score.ToString();
-		}
-	}
+	protected HUD hud;
 
 	public override void Start() {
 		base.Start();
