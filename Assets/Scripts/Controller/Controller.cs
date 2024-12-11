@@ -1,3 +1,5 @@
+using System;
+
 using UnityEngine;
 
 using Util;
@@ -21,19 +23,20 @@ public abstract class Controller : MonoBehaviour {
 	[SerializeField]
 	private int score;
 
-
 	[field: SerializeField]
 	public string Name { get; protected set; }
 	public virtual int Score {
 		get => score;
 		protected set {
 			score = value;
+			OnScoreChanged?.Invoke();
 		}
 	}
 	public virtual int Lives {
 		get => lives;
 		protected set {
 			lives = value;
+			OnLivesChanged?.Invoke();
 		}
 	}
 	[field: SerializeField]
@@ -64,6 +67,8 @@ public abstract class Controller : MonoBehaviour {
 
 	public event OnPossessHandler OnPossess;
 	public event OnUnpossessHandler OnUnpossess;
+	public event Action OnLivesChanged;
+	public event Action OnScoreChanged;
 
 	/**
 	 * <summary>
