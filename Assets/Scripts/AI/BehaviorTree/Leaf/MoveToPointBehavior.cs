@@ -76,6 +76,7 @@ namespace AI.BehaviorTree {
 		}
 
 		public override void Stop(AIController controller) {
+			if (!controller.PawnOptional) return;
 			agent.isStopped = true;
 		}
 	}
