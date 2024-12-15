@@ -41,6 +41,8 @@ public abstract class Controller : MonoBehaviour {
 	}
 	[field: SerializeField]
 	public int ScoreToLifeRatio { get; protected set; } = 1000;
+	[field: SerializeField]
+	public Optional<Camera> AttachedCamera { get; protected set; }
 
 	public Optional<Pawn> PawnOptional {
 		get => pawn;
@@ -48,17 +50,17 @@ public abstract class Controller : MonoBehaviour {
 			if (isUpdating) return;
 			isUpdating = true;
 
-			if (pawn) {
+			pawn.Then(x => {
 				OnUnpossess?.Invoke();
-				Pawn.UnbindController();
-			}
+				x.UnbindController();
+			});
 
 			pawn = value;
 
-			if (pawn) {
-				Pawn.BindController(this);
-				OnPossess?.Invoke(Pawn);
-			}
+			pawn.Then(x => {
+				x.BindController(this);
+				OnPossess?.Invoke(x);
+			});
 
 			isUpdating = false;
 		}
@@ -82,8 +84,11 @@ public abstract class Controller : MonoBehaviour {
 	 * Posess the given pawn
 	 * </summary>
 	 */
-	public virtual void Possess(Pawn pawn) {
+	public virtual bool Possess(Pawn pawn) {
+		if (isUpdating) return false;
 		PawnOptional = pawn;
+		AttachedCamera.Then(x => pawn.AttachCamera(x));
+		return true;
 	}
 
 	/**
@@ -91,8 +96,11 @@ public abstract class Controller : MonoBehaviour {
 	 * Unposess the current pawn
 	 * </summary>
 	 */
-	public virtual void Unpossess() {
+	public virtual bool Unpossess() {
+		if (isUpdating) return false;
+		PawnOptional.Then(x => x.DetachCamera());
 		PawnOptional = Optional<Pawn>.None;
+		return true;
 	}
 
 	/**
@@ -136,6 +144,26 @@ public abstract class Controller : MonoBehaviour {
 	public int RemoveLives(int amount) {
 		Lives -= amount;
 		return Lives;
+	}
+
+	/**
+	 * <summary>
+	 * Bind the given camera to this controller
+	 * </summary>
+	 */
+	public virtual void BindCamera(Camera camera) {
+		AttachedCamera = camera;
+		PawnOptional.Then(x => x.AttachCamera(camera));
+	}
+
+	/**
+	 * <summary>
+	 * Unbind the camera from this controller
+	 * </summary>
+	 */
+	public virtual void UnbindCamera() {
+		PawnOptional.Then(x => x.DetachCamera());
+		AttachedCamera = Optional<Camera>.None;
 	}
 
 	public virtual void Start() {

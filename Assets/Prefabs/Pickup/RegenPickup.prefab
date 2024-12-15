@@ -126,3 +126,4 @@ MonoBehaviour:
   duration: 10
   strength: 0.3
   effectType: RegenEffect
+  pickupSound: {fileID: 8300000, guid: 175734beb4c5b464782babacf46bdf86, type: 3}

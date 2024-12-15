@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using Unity.VisualScripting;
 
@@ -78,15 +79,38 @@ namespace Util {
 			hasValue = false;
 		}
 
-		public readonly override string ToString() {
-			return $"Optional<{typeof(T).Name}>"
-				+ (hasValue ? $" {{{value}}}" : ".None");
+		public readonly Optional<T> Where(Func<T, bool> predicate)
+			 => HasValue && predicate(Value) ? this : None;
+
+		public readonly Optional<TResult> Then<TResult>(Func<T, TResult> func)
+			=> HasValue ? func(Value) : Optional<TResult>.None;
+
+		public readonly Optional<TResult> Then<TResult>(Func<T, Optional<TResult>> func)
+			=> HasValue ? func(Value) : Optional<TResult>.None;
+
+		public readonly Optional<T> Then(Action<T> func) {
+			if (!HasValue) return None;
+			func(Value);
+			return this;
 		}
 
 		public readonly void OnBeforeSerialize() { }
 
 		public void OnAfterDeserialize() {
 			hasValue = value != null;
+		}
+
+		public readonly override string ToString() {
+			return $"Optional<{typeof(T).Name}>"
+				+ (hasValue ? $" {{{value}}}" : ".None");
+		}
+
+		public override readonly bool Equals(object obj) {
+			return obj is Optional<T> other && this == other;
+		}
+
+		public override readonly int GetHashCode() {
+			return HasValue ? EqualityComparer<T>.Default.GetHashCode(Value) : 0;
 		}
 
 		public static explicit operator T(Optional<T> optional) {
@@ -108,5 +132,30 @@ namespace Util {
 		public static bool operator false(Optional<T> optional) {
 			return !optional.HasValue;
 		}
+
+		public static bool operator ==(Optional<T> a, Optional<T> b) {
+			return a.HasValue && b.HasValue
+				&& EqualityComparer<T>.Default.Equals(a.Value, b.Value);
+		}
+
+		public static bool operator !=(Optional<T> a, Optional<T> b) {
+			return !(a == b);
+		}
+
+		public static bool operator ==(Optional<T> a, T b) {
+			return a.HasValue && EqualityComparer<T>.Default.Equals(a.Value, b);
+		}
+
+		public static bool operator !=(Optional<T> a, T b) {
+			return !(a == b);
+		}
+
+		public static Optional<T> operator |(Optional<T> a, Optional<T> b) => a ? a : b;
+
+		public static Optional<T> operator |(Optional<T> a, T b) => a ? a : b;
+
+		public static Optional<T> operator &(Optional<T> a, Optional<T> b) => a ? b : a;
+
+		public static Optional<T> operator &(Optional<T> a, T b) => a ? b : a;
 	}
 }

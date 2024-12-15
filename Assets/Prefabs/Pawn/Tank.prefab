@@ -1757,15 +1757,16 @@ MonoBehaviour:
     value: {fileID: 0}
   shooter:
     value: {fileID: 5549354520312236998}
-  healthbar:
-    value: {fileID: 2726725788690690802}
   <Name>k__BackingField: Tank
   <Health>k__BackingField:
     value: {fileID: 4819798683100222286}
+  <Healthbar>k__BackingField:
+    value: {fileID: 2726725788690690802}
   <Movement>k__BackingField: {fileID: 95875521669068994}
   <StatusEffectManager>k__BackingField: {fileID: 267570135782519702}
   autoPossessByController: 
   cameraTransform: {fileID: 753301483018660245}
+  deathSound: {fileID: 8300000, guid: acd9d4cd3f969ab459c68cca4b16e2f8, type: 3}
 --- !u!114 &95875521669068994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1803,6 +1804,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: -4313645151380586995, guid: cfceb5c934b728c45a70c8c10f265126, type: 3}
   owner:
     value: {fileID: 0}
+  sound: {fileID: 8300000, guid: d65d9e196fe49b54c858290f146f283b, type: 3}
 --- !u!114 &4819798683100222286
 MonoBehaviour:
   m_ObjectHideFlags: 0

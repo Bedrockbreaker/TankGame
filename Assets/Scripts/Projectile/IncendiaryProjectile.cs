@@ -11,6 +11,8 @@ public class IncendiaryProjectile : Projectile {
 	public int effectLevel = 1;
 
 	public override void Hit(Collider other) {
+		base.Hit(other);
+
 		if (other.TryGetComponent<StatusEffectManager>(
 			out var statusEffectManager
 		)) {

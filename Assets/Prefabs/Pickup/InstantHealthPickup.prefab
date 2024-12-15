@@ -126,3 +126,4 @@ MonoBehaviour:
   duration: 0
   strength: 20
   effectType: InstantHealthEffect
+  pickupSound: {fileID: 8300000, guid: 175734beb4c5b464782babacf46bdf86, type: 3}

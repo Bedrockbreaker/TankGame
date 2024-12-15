@@ -13,17 +13,19 @@ public class NoAIController : AIController {
 
 	protected override void HandleInput() { }
 
-	public override void Possess(Pawn pawn) {
-		base.Possess(pawn);
+	public override bool Possess(Pawn pawn) {
+		if (!base.Possess(pawn)) return false;
 
 		Optional<Rigidbody> rigidbody = pawn.GetComponent<Rigidbody>();
 		if (rigidbody) {
 			originalIsKinematic = rigidbody.Value.isKinematic;
 			rigidbody.Value.isKinematic = true;
 		}
+
+		return true;
 	}
 
-	public override void Unpossess() {
+	public override bool Unpossess() {
 		if (PawnOptional) {
 			Optional<Rigidbody> rigidbody = Pawn.GetComponent<Rigidbody>();
 			if (rigidbody) {
@@ -31,6 +33,6 @@ public class NoAIController : AIController {
 			}
 		}
 
-		base.Unpossess();
+		return base.Unpossess();
 	}
 }

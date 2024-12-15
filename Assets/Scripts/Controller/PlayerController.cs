@@ -1,3 +1,5 @@
+using System;
+
 using AI;
 
 using UnityEngine;
@@ -16,11 +18,14 @@ public class PlayerController : Controller {
 	protected InputAction inputShoot;
 	protected HUD hud;
 
+	[field: SerializeField]
+	public PlayerInput PlayerInput { get; protected set; }
+
 	public override void Start() {
 		base.Start();
 
-		inputMove = InputSystem.actions.FindAction("Move");
-		inputShoot = InputSystem.actions.FindAction("Attack");
+		inputMove = PlayerInput.actions.FindAction("Move");
+		inputShoot = PlayerInput.actions.FindAction("Attack");
 		inputShoot.performed += HandleShoot;
 	}
 
@@ -36,25 +41,59 @@ public class PlayerController : Controller {
 		Pawn.Move(movement.y);
 	}
 
-	public override void Possess(Pawn pawn) {
-		base.Possess(pawn);
+	public override bool Possess(Pawn pawn) {
+		if (!base.Possess(pawn)) return false;
 		UpdateBlackboardPlayerTransform();
+		pawn.Health.Then(x => x.OnDeath += OnPawnDeath);
+		pawn.Healthbar.Then(x => x.SetBackfaceEnabled(false));
+		return true;
 	}
 
-	public override void Unpossess() {
-		base.Unpossess();
+	public override bool Unpossess() {
+		PawnOptional
+			.Then(x => x.Health)
+			.Then(x => x.OnDeath -= OnPawnDeath);
+		PawnOptional
+			.Then(x => x.Healthbar)
+			.Then(x => x.SetOriginalBackfaceEnabled());
+
+		if (!base.Unpossess()) return false;
 		UpdateBlackboardPlayerTransform();
+		return true;
+	}
+
+	public void SetHUD(HUD hud) {
+		this.hud = hud;
+		hud.SetController(this);
 	}
 
 	protected void HandleShoot(InputAction.CallbackContext context) {
-		if (!PawnOptional) return;
-		Pawn.Shoot();
+		PawnOptional.Then(x => x.Shoot());
 	}
+
 
 	protected void UpdateBlackboardPlayerTransform() {
 		Blackboard.GLOBAL.Set("PlayerTransform", PawnOptional
 			? Pawn.transform
 			: Optional<Transform>.None
 		);
+	}
+
+	protected void OnPawnDeath(Optional<Controller> attacker) {
+		RemoveLives(1);
+
+		if (Lives > 0) {
+			GameManager.Instance.RespawnPlayer(
+				GameManager.Instance.defaultPawnPrefab,
+				this,
+				Optional<PawnSpawnPoint>.None
+			);
+		} else {
+			PlayerPrefs.SetInt(
+				"highscore",
+				Math.Max(Score, PlayerPrefs.GetInt("highscore", 0))
+			);
+			hud.SetGameOver();
+		}
 	}
 }

@@ -18,24 +18,23 @@ public abstract class Pawn : MonoBehaviour {
 	[ReadOnly]
 	[SerializeField]
 	private Optional<Controller> controller = Optional<Controller>.None;
-	private bool originalHealthbarBackfaceEnabled;
 
 	[SerializeField]
 	protected Optional<Shooter> shooter;
-	[SerializeField]
-	protected Optional<Healthbar> healthbar;
-	protected Optional<Camera> attachedCamera;
 
 	[field: SerializeField]
 	public string Name { get; protected set; }
 	[field: SerializeField]
 	public Optional<Health> Health { get; protected set; }
 	[field: SerializeField]
+	public Optional<Healthbar> Healthbar { get; protected set; }
+	[field: SerializeField]
 	public BasicMovement Movement { get; protected set; }
 	[field: SerializeField]
 	public StatusEffectManager StatusEffectManager { get; protected set; }
 	[Type(typeof(Controller))]
 	public string autoPossessByController;
+	public Optional<Camera> AttachedCamera { get; protected set; }
 
 	public Optional<Controller> ControllerOptional {
 		get => controller;
@@ -43,17 +42,17 @@ public abstract class Pawn : MonoBehaviour {
 			if (isUpdating) return;
 			isUpdating = true;
 
-			if (controller) {
+			controller.Then(x => {
 				OnCountrollerUnbound?.Invoke();
-				Controller.Unpossess();
-			}
+				x.Unpossess();
+			});
 
 			controller = value;
 
-			if (controller) {
-				Controller.Possess(this);
-				OnControllerBound?.Invoke(Controller);
-			}
+			controller.Then(x => {
+				x.Possess(this);
+				OnControllerBound?.Invoke(x);
+			});
 
 			isUpdating = false;
 		}
@@ -72,12 +71,7 @@ public abstract class Pawn : MonoBehaviour {
 	 */
 	public virtual void BindController(Controller controller) {
 		ControllerOptional = controller;
-
-		if (shooter) shooter.Value.owner = controller;
-		if (controller is PlayerController && healthbar) {
-			originalHealthbarBackfaceEnabled = healthbar.Value.BackfaceEnabled;
-			healthbar.Value.SetBackfaceEnabled(false);
-		}
+		shooter.Then(x => x.owner = controller);
 	}
 
 	/**
@@ -86,13 +80,8 @@ public abstract class Pawn : MonoBehaviour {
 	 * </summary>
 	 */
 	public virtual void UnbindController() {
-		if (Controller is PlayerController && healthbar) {
-			healthbar.Value.SetBackfaceEnabled(originalHealthbarBackfaceEnabled);
-		}
-
 		ControllerOptional = Optional<Controller>.None;
-
-		if (shooter) shooter.Value.owner = Optional<Controller>.None;
+		shooter.Then(x => x.owner = Optional<Controller>.None);
 	}
 
 	/**
@@ -101,7 +90,16 @@ public abstract class Pawn : MonoBehaviour {
 	 * </summary>
 	 */
 	public virtual void AttachCamera(Camera camera) {
-		attachedCamera = camera;
+		AttachedCamera = camera;
+	}
+
+	/**
+	 * <summary>
+	 * Detach the camera
+	 * </summary>
+	 */
+	public virtual void DetachCamera() {
+		AttachedCamera = Optional<Camera>.None;
 	}
 
 	/**
@@ -175,8 +173,20 @@ public abstract class Pawn : MonoBehaviour {
 		return shooter.Value.Shoot();
 	}
 
+	/**
+	 * <summary>
+	 * Called when the health component for this pawn emits a death event
+	 * </summary>
+	 */
+	public virtual void OnDeath(Optional<Controller> attacker) {
+		Health.Value.OnDeath -= OnDeath;
+		DetachCamera();
+	}
+
 	public virtual void Start() {
 		GameManager.Instance.RegisterPawn(this);
+
+		Health.Then(x => x.OnDeath += OnDeath);
 
 		if (ControllerOptional) return;
 		if (string.IsNullOrEmpty(autoPossessByController)) return;
@@ -190,9 +200,7 @@ public abstract class Pawn : MonoBehaviour {
 	}
 
 	public virtual void OnDestroy() {
-		if (ControllerOptional) Controller.RemoveLives(1);
 		UnbindController();
-		if (attachedCamera) attachedCamera.Value.transform.parent = null;
 		GameManager.Instance.UnregisterPawn(this);
 	}
 }

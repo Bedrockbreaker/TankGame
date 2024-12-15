@@ -1,14 +1,16 @@
 using System.Collections.Generic;
-using System.Linq;
 
 using AI;
 using AI.Sense;
+
+using Unity.VisualScripting;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 using UnityEngine;
+using UnityEngine.Audio;
 
 using Util;
 
@@ -36,16 +38,32 @@ public sealed class GameManager : MonoBehaviour {
 	public AIController aiControllerPrefab3;
 	public AIController aiControllerPrefab4;
 	public Camera cameraPrefab;
-	private Controller playerControllerRemoveMe;
 
 	[Header("World Objects")]
 	public Camera defaultCamera;
 	public MapGenerator mapGenerator;
-	public HUD hud;
+
+	[field: Header("UI")]
+	[field: SerializeField, ReadOnly]
+	public Optional<Menu> ActiveMenu { get; private set; } = Optional<Menu>.None;
+
+	[Header("Audio")]
+	public AudioClip menuMusic;
+	public AudioClip gameMusic;
+	[field: SerializeField]
+	public AudioMixer AudioMixer { get; private set; }
+	[field: SerializeField]
+	public AudioSource MusicSource { get; private set; }
+	[field: SerializeField]
+	public AudioSource EffectSource { get; private set; }
+	[field: SerializeField]
+	public List<string> VolumeParameters { get; private set; } = new();
 
 	[Header("Default Prefabs")]
 	public Pawn defaultPawnPrefab;
 	public Controller defaultControllerPrefab;
+	public Camera defaultCameraPrefab;
+	public HUD defaultHUDPrefab;
 
 	[Header("Blackboard Keys")]
 	public BlackboardKey<List<Sound>> SoundsKey = "Sounds";
@@ -59,48 +77,58 @@ public sealed class GameManager : MonoBehaviour {
 		Blackboard.GLOBAL.Set(SoundsKey, Sounds);
 	}
 
-	// HACK
-	public void HackyRespawnPawnPleaseRemoveMe(Controller controller) {
-		if (controller.Lives <= 0) {
-			Debug.Log("Player is dead, not respawning.");
-			return;
-		}
-
-		PawnSpawnPoint spawnPoint = SpawnPoints.Random();
-		Pawn pawn = Instantiate(
-			defaultPawnPrefab,
-			spawnPoint.transform.position,
-			spawnPoint.transform.rotation
-		);
-		Camera camera = Instantiate(cameraPrefab);
-
-		controller.Possess(pawn);
-		pawn.AttachCamera(camera);
-	}
-
 	private void Awake() {
 		// TODO: strip MonoBehavior from GameManager. Put this into the constructor.
 		if (Instance != this) {
+			Instance.PlayMusic(menuMusic);
 			Destroy(gameObject);
 			return;
 		} else {
 			DontDestroyOnLoad(gameObject);
 		}
-
-		mapGenerator.Generate();
 	}
 
 	private void Start() {
-		int spawnCount = (spawnPlayerAtCamera ? 0 : 1) + AICount;
+		foreach (string volumeParameter in VolumeParameters) {
+			SetMixerAttenuation(
+				volumeParameter,
+				PlayerPrefs.GetFloat(volumeParameter, 1f)
+			);
+		}
+	}
+
+	private void Update() {
+		for (int i = Sounds.Count - 1; i >= 0; i--) {
+			Sounds[i].Update();
+		}
+	}
+
+	/**
+	 * <summary>
+	 * Generate the map, spawn the pawns/controllers, and start the game
+	 * </summary>
+	 */
+	public void StartGame(long seed = 0, bool multiplayer = false) {
+		PlayMusic(gameMusic);
+
+		mapGenerator.Generate(seed);
+
+		int numPlayers = multiplayer ? 2 : 1;
+
+		int spawnCount = (spawnPlayerAtCamera ? 0 : numPlayers) + AICount;
 		List<PawnSpawnPoint> selectedSpawnPoints = SpawnPoints.TakeRandom(spawnCount);
 
-		SpawnPlayer(
-			defaultPawnPrefab,
-			defaultControllerPrefab,
-			spawnPlayerAtCamera
-				? Optional<PawnSpawnPoint>.None
-				: selectedSpawnPoints.Last()
-		);
+		defaultCamera.gameObject.SetActive(false);
+
+		for (int i = 0; i < numPlayers; i++) {
+			SpawnPlayer(
+				defaultPawnPrefab,
+				defaultControllerPrefab,
+				spawnPlayerAtCamera
+					? Optional<PawnSpawnPoint>.None
+					: selectedSpawnPoints[^(i + 1)]
+			);
+		}
 
 		for (int i = 0; i < AICount; i++) {
 			Controller controller = (i % 4) switch {
@@ -111,16 +139,6 @@ public sealed class GameManager : MonoBehaviour {
 			};
 
 			SpawnPlayer(defaultPawnPrefab, controller, selectedSpawnPoints[i]);
-		}
-	}
-
-	private void Update() {
-		for (int i = Sounds.Count - 1; i >= 0; i--) {
-			Sounds[i].Update();
-		}
-
-		if (!playerControllerRemoveMe.PawnOptional) {
-			HackyRespawnPawnPleaseRemoveMe(playerControllerRemoveMe);
 		}
 	}
 
@@ -153,13 +171,22 @@ public sealed class GameManager : MonoBehaviour {
 		if (controller is not PlayerController playerController) return;
 
 		PlayerControllers.Add(playerController);
-		hud.SetController(playerController);
+		HUD hud = Instantiate(defaultHUDPrefab);
+		playerController.SetHUD(hud);
 
 		if (!controller.PawnOptional) return;
-		if (PlayerControllers.Count > 1) return;
 
-		controller.Pawn.AttachCamera(defaultCamera);
-		playerControllerRemoveMe = controller;
+		Camera camera = Instantiate(defaultCameraPrefab);
+		controller.BindCamera(camera);
+		hud.SetCamera(camera);
+
+		if (PlayerControllers.Count == 2) {
+			// HACK: we're assuming RegisterController is only called when the game starts
+			// which means Pawn and AttachedCamera are always valid
+			Camera camera1 = PlayerControllers[0].Pawn.AttachedCamera.Value;
+			camera1.rect = new Rect(0, 0.5f, 1, 0.5f);
+			camera.rect = new Rect(0, 0, 1, 0.5f);
+		}
 	}
 
 	/**
@@ -195,6 +222,20 @@ public sealed class GameManager : MonoBehaviour {
 
 	/**
 	 * <summary>
+	 * Spawns a new pawn at a random spawn point and binds it to the given (existing) controller.
+	 * </summary>
+	 */
+	public void RespawnPlayer(
+		Pawn pawnPrefab,
+		Controller controller,
+		Optional<PawnSpawnPoint> spawnPoint
+	) {
+		spawnPoint |= SpawnPoints.Random();
+		SpawnPlayer(pawnPrefab, controller, spawnPoint, false);
+	}
+
+	/**
+	 * <summary>
 	 * Spawn a new controller and pawn at the given spawn point.<br/>
 	 * If no spawn point is provided, the editor camera transform will be used.
 	 * </summary>
@@ -202,16 +243,17 @@ public sealed class GameManager : MonoBehaviour {
 	 * If no spawn point is provided and the game is running in production,<br/>
 	 * it will spawn at <see cref="Vector3.zero"/> and <see cref="Quaternion.identity"/>.
 	 * </remarks>
-	 * <seealso cref="SpawnPlayer(Pawn, Controller, Pose)"/>
+	 * <seealso cref="SpawnPlayer(Pawn, Controller, Pose, bool)"/>
 	 */
 	public void SpawnPlayer(
 		Pawn pawnPrefab,
 		Controller controllerPrefab,
-		Optional<PawnSpawnPoint> spawnPoint
+		Optional<PawnSpawnPoint> spawnPoint,
+		bool controllerIsPrefab = true
 	) {
 		Pose spawn = spawnPoint
-			? new Pose(spawnPoint.Value.transform.position, spawnPoint.Value.transform.rotation)
-			: Pose.identity;
+			.Then(x => new Pose(x.transform.position, x.transform.rotation))
+			.ValueOrDefault(Pose.identity);
 
 #if UNITY_EDITOR
 		if (!spawnPoint) {
@@ -222,19 +264,21 @@ public sealed class GameManager : MonoBehaviour {
 		}
 #endif
 
-		SpawnPlayer(pawnPrefab, controllerPrefab, spawn);
+		SpawnPlayer(pawnPrefab, controllerPrefab, spawn, controllerIsPrefab);
 	}
 
 	/**
 	 * <summary>
-	 * Spawn a new controller and pawn at the given spawn pose.
+	 * Spawn a new pawn at the given spawn pose.<br/>
+	 * Spawns a new controller if it's a prefab.
 	 * </summary>
 	 * <seealso cref="SpawnPlayer(Pawn, Controller, Optional&lt;PawnSpawnPoint&gt;)"/> 
 	 */
 	public void SpawnPlayer(
 		Pawn pawnPrefab,
-		Controller controllerPrefab,
-		Pose spawn
+		Controller controller,
+		Pose spawn,
+		bool controllerIsPrefab = true
 	) {
 		Pawn pawn = Instantiate(
 			pawnPrefab,
@@ -242,12 +286,58 @@ public sealed class GameManager : MonoBehaviour {
 			spawn.rotation
 		);
 
-		Controller controller = Instantiate(
-			controllerPrefab,
-			spawn.position,
-			spawn.rotation
-		);
+		controller.IsPrefabDefinition();
+
+		if (controllerIsPrefab) {
+			controller = Instantiate(
+				controller,
+				spawn.position,
+				spawn.rotation
+			);
+		}
 
 		controller.Possess(pawn);
+	}
+
+	/**
+	 * <summary>
+	 * Enable the given menu
+	 * </summary>
+	 */
+	public void SetMenuActive(Optional<Menu> menu) {
+		ActiveMenu.Then(x => x.gameObject.SetActive(false));
+		ActiveMenu = menu;
+		ActiveMenu.Then(x => x.gameObject.SetActive(true));
+	}
+
+	/**
+	 * <summary>
+	 * Play a music clip
+	 * </summary>
+	 */
+	public void PlayMusic(AudioClip clip) {
+		MusicSource.clip = clip;
+		MusicSource.Play();
+	}
+
+	/**
+	 * <summary>
+	 * Play a one-shot sound
+	 * </summary>
+	 */
+	public void PlayOneShot(AudioClip clip, float volume = 1f) {
+		EffectSource.PlayOneShot(clip, volume);
+	}
+
+	/**
+	 * <summary>
+	 * Set the volume of an audio mixer group
+	 * </summary>
+	 */
+	public void SetMixerAttenuation(string volumeParameter, float value) {
+		AudioMixer.SetFloat(
+			volumeParameter,
+			value <= 0f ? -80f : Mathf.Log10(value) * 20f
+		);
 	}
 }

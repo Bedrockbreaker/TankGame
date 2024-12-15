@@ -13,6 +13,8 @@ using UnityEngine;
  */
 public class MapGenerator : MonoBehaviour {
 
+	public static MapGenerator Instance { get; protected set; }
+
 	protected Room[,] cells;
 	protected List<Room>[,] quantumCells;
 
@@ -32,8 +34,24 @@ public class MapGenerator : MonoBehaviour {
 
 	[Header("Random")]
 	public long seed = 0;
-	// TODO: remove lotd, use seed (generated from date) given to Generate()
-	public bool levelOfTheDay = false;
+
+	public MapGenerator() {
+		// Unity objects should not use coalescing assignment. (UNT0023)
+		// Instance ??= this;
+		if (Instance != null) return;
+		Instance = this;
+	}
+
+	protected void Awake() {
+		if (Instance != this) {
+			foreach (Transform child in Instance.transform) Destroy(child.gameObject);
+			Instance.seed = 0;
+			Destroy(gameObject);
+			return;
+		} else {
+			DontDestroyOnLoad(gameObject);
+		}
+	}
 
 	/**
 	 * <summary>
@@ -43,11 +61,7 @@ public class MapGenerator : MonoBehaviour {
 	protected List<Tuple<int, int>> Initialize(long seed = 0) {
 		if (seed == 0) {
 			seed = this.seed == 0
-				? (
-					levelOfTheDay
-						? (long)new TimeSpan(DateTime.Now.Ticks).TotalDays
-						: DateTime.Now.Ticks
-				)
+				? DateTime.Now.Ticks
 				: this.seed;
 		}
 		this.seed = seed;

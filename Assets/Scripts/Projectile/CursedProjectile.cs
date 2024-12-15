@@ -10,6 +10,8 @@ public class CursedProjectile : Projectile {
 	public float effectDurationSeconds = 10;
 
 	public override void Hit(Collider other) {
+		base.Hit(other);
+
 		if (other.TryGetComponent<StatusEffectManager>(
 			out var statusEffectManager
 		)) {

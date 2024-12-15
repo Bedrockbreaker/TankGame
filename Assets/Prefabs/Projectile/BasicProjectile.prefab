@@ -153,6 +153,7 @@ MonoBehaviour:
   owner:
     value: {fileID: 0}
   lifetime: 7
+  hitSound: {fileID: 8300000, guid: 26ed2e725d3b0834b9f4657b66346d4c, type: 3}
   <Damager>k__BackingField: {fileID: 1092981962191463179}
 --- !u!114 &1092981962191463179
 MonoBehaviour:

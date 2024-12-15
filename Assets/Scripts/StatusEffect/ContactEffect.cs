@@ -13,6 +13,7 @@ public class ContactEffect : ContactListener {
 	public string effectType;
 	// [HideInInspector]
 	// public Template effectTemplate = new();
+	public AudioClip pickupSound;
 
 	public void Start() {
 		OnContact += Apply;
@@ -20,6 +21,8 @@ public class ContactEffect : ContactListener {
 
 	public void Apply(Collider other) {
 		if (other.TryGetComponent<StatusEffectManager>(out var statusEffectManager)) {
+			GameManager.Instance.PlayOneShot(pickupSound);
+
 			// StatusEffect effect = effectTemplate.CreateInstance() as StatusEffect;
 			StatusEffect effect = Activator.CreateInstance(
 				Type.GetType(effectType),

@@ -12,6 +12,7 @@ public abstract class Projectile : ContactListener {
 	[ReadOnly]
 	public Optional<Controller> owner = Optional<Controller>.None;
 	public float lifetime = 7f;
+	public AudioClip hitSound;
 
 	public virtual void Start() {
 		Destroy(gameObject, lifetime);
@@ -25,6 +26,6 @@ public abstract class Projectile : ContactListener {
 	 * </summary>
 	 */
 	public virtual void Hit(Collider other) {
-
+		GameManager.Instance.PlayOneShot(hitSound);
 	}
 }

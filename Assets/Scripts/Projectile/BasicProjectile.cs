@@ -17,6 +17,7 @@ public class BasicProjectile : Projectile {
 	}
 
 	public override void Hit(Collider other) {
+		base.Hit(other);
 		Destroy(gameObject);
 	}
 }

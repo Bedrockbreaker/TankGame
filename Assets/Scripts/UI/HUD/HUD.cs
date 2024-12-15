@@ -1,3 +1,5 @@
+using System;
+
 using TMPro;
 
 using UnityEngine;
@@ -15,7 +17,11 @@ public class HUD : MonoBehaviour {
 	[field: SerializeField, ReadOnly]
 	private Optional<Health> health;
 
+	[SerializeField]
+	protected Canvas canvas;
 	protected Material healthbarMaterial;
+	[SerializeField]
+	protected GameOverMenu gameOverMenu;
 
 	public TextMeshProUGUI scoreText;
 	public TextMeshProUGUI livesText;
@@ -45,7 +51,7 @@ public class HUD : MonoBehaviour {
 
 	public virtual void OnLivesChanged() {
 		if (Controller) {
-			livesText.text = new string('♥', Controller.Value.Lives);
+			livesText.text = new string('♥', Math.Max(Controller.Value.Lives, 0));
 		} else {
 			livesText.text = "";
 		}
@@ -95,7 +101,18 @@ public class HUD : MonoBehaviour {
 		OnPawnChanged();
 	}
 
-	public virtual void Start() {
+	public virtual void SetCamera(Camera camera) => canvas.worldCamera = camera;
+
+	public virtual void SetGameOver() {
+		Controller.Then(x => {
+			int highscore = PlayerPrefs.GetInt("highscore", 0);
+			gameOverMenu.SetText(x.Score, highscore, MapGenerator.Instance.seed);
+		});
+		gameOverMenu.gameObject.SetActive(true);
+	}
+
+	public virtual void Awake() {
+		canvas.planeDistance = 0.4f;
 		healthbarMaterial = Instantiate(healthbar.material);
 		healthbar.material = healthbarMaterial;
 	}

@@ -40,6 +40,8 @@ public class Healthbar : MonoBehaviour {
 	[SerializeField]
 	protected Image backplate2;
 
+
+	protected bool originalBackfaceEnabled;
 	public bool BackfaceEnabled { get; protected set; } = true;
 
 	/**
@@ -91,6 +93,9 @@ public class Healthbar : MonoBehaviour {
 		nameText2.enabled = enabled;
 		backplate2.enabled = enabled;
 	}
+
+	public virtual void SetOriginalBackfaceEnabled()
+		=> SetBackfaceEnabled(originalBackfaceEnabled);
 
 	public virtual void Start() {
 		healthbarMaterial = Instantiate(healthbar1.material);

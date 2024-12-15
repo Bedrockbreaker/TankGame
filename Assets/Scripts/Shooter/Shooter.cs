@@ -26,6 +26,7 @@ public abstract class Shooter : MonoBehaviour {
 	public Transform spawnTransform;
 	public Projectile projectilePrefab;
 	public Optional<Controller> owner;
+	public AudioClip sound;
 
 	/**
 	 * <summary>
@@ -46,6 +47,7 @@ public abstract class Shooter : MonoBehaviour {
 	public virtual bool Shoot() {
 		if (!canShoot) return false;
 
+		GameManager.Instance.PlayOneShot(sound);
 		List<Sound> sounds = Blackboard.GLOBAL.Get(GameManager.Instance.SoundsKey);
 		sounds.Add(new(sounds, owner, spawnTransform.position, volume));
 

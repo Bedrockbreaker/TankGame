@@ -152,3 +152,5 @@ MonoBehaviour:
   owner:
     value: {fileID: 0}
   lifetime: 3
+  hitSound: {fileID: 8300000, guid: 26ed2e725d3b0834b9f4657b66346d4c, type: 3}
+  effectDurationSeconds: 10
